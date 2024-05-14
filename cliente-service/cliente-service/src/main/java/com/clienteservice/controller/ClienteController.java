@@ -79,8 +79,8 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))})
     })
     public ResponseEntity<ClienteDTO> encontrarClientePorId(@PathVariable UUID id) {
-        ClienteDTO condutorDTO = this.clienteService.encontrarClientePorId(id);
-        return new ResponseEntity<>(condutorDTO, HttpStatus.OK);
+        ClienteDTO clienteDTO = this.clienteService.encontrarClientePorId(id);
+        return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
     }
 
     @GetMapping()
