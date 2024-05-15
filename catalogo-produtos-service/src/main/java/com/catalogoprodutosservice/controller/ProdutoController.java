@@ -10,6 +10,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +34,7 @@ public class ProdutoController {
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Cadastro de Produto", description = "Esté metodo tem como finalidade permitir o cadastro de produtos no sistema, associando os dados do produto.", method = "POST")
@@ -117,4 +123,5 @@ public class ProdutoController {
         final ProdutoDTO produtoDTO = produtoService.incrementarEstoque(id, quantidade);
         return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
     }
+
 }
