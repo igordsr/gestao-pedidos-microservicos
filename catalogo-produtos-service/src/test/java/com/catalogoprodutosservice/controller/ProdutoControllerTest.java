@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.launch.JobLauncher;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,12 +23,16 @@ class ProdutoControllerTest {
     private ProdutoController produtoController;
     @Mock
     private ProdutoService produtoService;
+    @Mock
+    private JobLauncher jobLauncher;
+    @Mock
+    private Job job;
     private ProdutoDTO produtoDTOMock = mock(ProdutoDTO.class);
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.produtoController = new ProdutoController(produtoService);
+        this.produtoController = new ProdutoController(produtoService, jobLauncher, job);
     }
 
     @Test

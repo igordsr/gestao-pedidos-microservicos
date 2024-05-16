@@ -31,16 +31,14 @@ import java.util.UUID;
 @Tag(name = "Produto")
 public class ProdutoController {
     private final ProdutoService produtoService;
+    private final JobLauncher jobLauncher;
+    private final Job job;
 
     @Autowired
-    private JobLauncher jobLauncher;
-
-    @Autowired
-    private Job job;
-
-    @Autowired
-    public ProdutoController(ProdutoService produtoService) {
+    public ProdutoController(ProdutoService produtoService, JobLauncher jobLauncher, Job job) {
         this.produtoService = produtoService;
+        this.jobLauncher = jobLauncher;
+        this.job = job;
     }
 
 
