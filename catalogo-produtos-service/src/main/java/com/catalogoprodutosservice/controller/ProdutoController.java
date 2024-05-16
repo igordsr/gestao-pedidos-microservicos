@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -79,6 +80,19 @@ public class ProdutoController {
     })
     public ResponseEntity<ProdutoDTO> encontrarProdutoPorId(@PathVariable UUID id) {
         ProdutoDTO produtoDTO = this.produtoService.encontrarProdutoPorId(id);
+        return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("filterById={id}")
+    @Operation(summary = "Consultar dados do produto pelo id", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do produto.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consulta do produto realizado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+    })
+    public ResponseEntity<List<ProdutoDTO>> encontrarProdutosPorIds(@PathVariable @NotEmpty List<UUID> id) {
+        List<ProdutoDTO> produtoDTO = this.produtoService.encontrarProdutosPorIds(id);
         return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
     }
 
