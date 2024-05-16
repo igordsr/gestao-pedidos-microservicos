@@ -11,12 +11,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.batch.core.*;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,9 +33,16 @@ public class ProdutoController {
     private final ProdutoService produtoService;
 
     @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private Job job;
+
+    @Autowired
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Cadastro de Produto", description = "Esté metodo tem como finalidade permitir o cadastro de produtos no sistema, associando os dados do produto.", method = "POST")
@@ -131,4 +144,17 @@ public class ProdutoController {
         final ProdutoDTO produtoDTO = produtoService.incrementarEstoque(id, quantidade);
         return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
     }
+
+    @GetMapping("/batch")
+    public BatchStatus batch() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addDate("timestamp", Calendar.getInstance().getTime())
+                .toJobParameters();
+        JobExecution jobExecution = jobLauncher.run(job, jobParameters);
+        while (jobExecution.isRunning()) {
+            System.out.println("..................");
+        }
+        return jobExecution.getStatus();
+    }
+
 }

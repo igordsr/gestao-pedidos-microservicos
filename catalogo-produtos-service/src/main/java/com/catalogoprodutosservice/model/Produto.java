@@ -30,7 +30,7 @@ public class Produto {
 
     @PositiveOrZero
     @Column(name = "qtd_estoque", nullable = false)
-    private Integer qtdEstoque;
+        private Integer qtdEstoque;
 
     @Column(nullable = false)
     private boolean status = Boolean.TRUE;
