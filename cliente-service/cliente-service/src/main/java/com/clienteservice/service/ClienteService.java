@@ -49,7 +49,11 @@ public class ClienteService {
         Assert.notNull(clienteDTO, "O objeto clienteDTO não pode ser null");
         Cliente cliente = this.findById(id);
         cliente.setNome(clienteDTO.nome());
-        cliente.setEndereco(clienteDTO.endereco());
+        cliente.setCep(clienteDTO.cep());
+        cliente.setLogradouro(clienteDTO.logradouro());
+        cliente.setComplemento(clienteDTO.complemento());
+        cliente.setBairro(clienteDTO.bairro());
+        cliente.setNumero(clienteDTO.numero());
         cliente.setTelefone(clienteDTO.telefone());
         cliente.setEmail(clienteDTO.email());
         cliente.setDataNascimento(clienteDTO.dataNascimento());
