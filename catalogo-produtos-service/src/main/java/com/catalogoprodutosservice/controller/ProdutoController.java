@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -30,16 +31,14 @@ import java.util.UUID;
 @Tag(name = "Produto")
 public class ProdutoController {
     private final ProdutoService produtoService;
+    private final JobLauncher jobLauncher;
+    private final Job job;
 
     @Autowired
-    private JobLauncher jobLauncher;
-
-    @Autowired
-    private Job job;
-
-    @Autowired
-    public ProdutoController(ProdutoService produtoService) {
+    public ProdutoController(ProdutoService produtoService, JobLauncher jobLauncher, Job job) {
         this.produtoService = produtoService;
+        this.jobLauncher = jobLauncher;
+        this.job = job;
     }
 
 
@@ -92,6 +91,19 @@ public class ProdutoController {
     })
     public ResponseEntity<ProdutoDTO> encontrarProdutoPorId(@PathVariable UUID id) {
         ProdutoDTO produtoDTO = this.produtoService.encontrarProdutoPorId(id);
+        return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("filterById={id}")
+    @Operation(summary = "Consultar dados do produto pelo id", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do produto.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consulta do produto realizado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+    })
+    public ResponseEntity<List<ProdutoDTO>> encontrarProdutosPorIds(@PathVariable @NotEmpty List<UUID> id) {
+        List<ProdutoDTO> produtoDTO = this.produtoService.encontrarProdutosPorIds(id);
         return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
     }
 

@@ -45,6 +45,12 @@ public class ProdutoService {
         return ProdutoDTO.getInstance(produto);
     }
 
+    public List<ProdutoDTO> encontrarProdutosPorIds(List<UUID> id) {
+        List<Produto> produtos = this.produtoRepository.findAllById(id);
+        final List<ProdutoDTO> produtoDTOS = produtos.stream().map(ProdutoDTO::getInstance).toList();
+        return produtoDTOS;
+    }
+
     public ProdutoDTO atualizarProduto(final UUID id, final ProdutoDTO produtoDTO) {
         Assert.notNull(id, "O objeto id não pode ser null");
         Assert.notNull(produtoDTO, "O objeto produtoDTO não pode ser null");
