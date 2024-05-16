@@ -22,10 +22,29 @@ public record ClienteDTO(
         @NotBlank(message = "O nome não pode estar em branco")
         String nome,
 
-        @Schema(example = "Rua Anéo Costamilan, 355")
-        @NotNull(message = "O endereço do cliente não pode estar em nulo.")
-        @NotBlank(message = "O endereço do cliente não pode estar em Branco.")
-        String endereco,
+        @Schema(example = "01001-000")
+        @NotNull(message = "O CEP não pode estar em nulo.")
+        @NotBlank(message = "O CEP não pode estar em Branco.")
+        @Pattern(regexp = "\\d{5}-\\d{3}", message = "O CEP deve estar no formato 00000-000")
+        String cep,
+
+        @Schema(example = "Praça da Sé")
+        @NotNull(message = "O logradouro não pode estar em nulo.")
+        @NotBlank(message = "O logradouro não pode estar em Branco.")
+        String logradouro,
+
+        @Schema(example = "lado ímpar")
+        String complemento,
+
+        @Schema(example = "Sé")
+        @NotNull(message = "O bairro não pode estar em nulo.")
+        @NotBlank(message = "O bairro não pode estar em Branco.")
+        String bairro,
+
+        @Schema(example = "138")
+        @NotNull(message = "O número não pode estar em nulo.")
+        @NotBlank(message = "O número não pode estar em Branco.")
+        String numero,
         @Schema(example = "5435008794")
         @NotNull(message = "O telefone do cliente não pode estar em nulo.")
         @NotBlank(message = "O telefone do cliente não pode estar em Branco.")
@@ -48,7 +67,11 @@ public record ClienteDTO(
     public Cliente toCliente() {
         Cliente cliente = new Cliente();
         cliente.setNome(nome);
-        cliente.setEndereco(endereco);
+        cliente.setCep(cep);
+        cliente.setLogradouro(logradouro);
+        cliente.setComplemento(complemento);
+        cliente.setBairro(bairro);
+        cliente.setNumero(numero);
         cliente.setTelefone(telefone);
         cliente.setEmail(email);
         cliente.setDataNascimento(dataNascimento);
@@ -58,6 +81,10 @@ public record ClienteDTO(
 
     public static ClienteDTO getInstance(final Cliente cliente) {
         Assert.notNull(cliente, "Objeto não pode ser nulo");
-        return new ClienteDTO(cliente.getId(), cliente.getNome(), cliente.getEndereco(), cliente.getTelefone(), cliente.getEmail(), cliente.getDataNascimento(), cliente.getCpf());
+        return new ClienteDTO(cliente.getId(), cliente.getNome(), cliente.getCep(),
+                cliente.getLogradouro(),
+                cliente.getComplemento(),
+                cliente.getBairro(),
+                cliente.getNumero(), cliente.getTelefone(), cliente.getEmail(), cliente.getDataNascimento(), cliente.getCpf());
     }
 }

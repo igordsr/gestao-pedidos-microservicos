@@ -50,7 +50,11 @@ class ClienteControllerIT {
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("nome", equalTo(clienteDTO.nome()))
-                .body("endereco", equalTo(clienteDTO.endereco()))
+                .body("cep", equalTo(clienteDTO.cep()))
+                .body("logradouro", equalTo(clienteDTO.logradouro()))
+                .body("complemento", equalTo(clienteDTO.complemento()))
+                .body("bairro", equalTo(clienteDTO.bairro()))
+                .body("numero", equalTo(clienteDTO.numero()))
                 .body("telefone", equalTo(clienteDTO.telefone()))
                 .body("email", equalTo(clienteDTO.email()))
                 .body("dataNascimento", equalTo(clienteDTO.dataNascimento().toString()))
@@ -70,7 +74,11 @@ class ClienteControllerIT {
                 .log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("nome", equalTo(clienteDTO.nome()))
-                .body("endereco", equalTo(clienteDTO.endereco()))
+                .body("cep", equalTo(clienteDTO.cep()))
+                .body("logradouro", equalTo(clienteDTO.logradouro()))
+                .body("complemento", equalTo(clienteDTO.complemento()))
+                .body("bairro", equalTo(clienteDTO.bairro()))
+                .body("numero", equalTo(clienteDTO.numero()))
                 .body("telefone", equalTo(clienteDTO.telefone()))
                 .body("email", equalTo(clienteDTO.email()))
                 .body("dataNascimento", equalTo(clienteDTO.dataNascimento().toString()))
@@ -92,7 +100,7 @@ class ClienteControllerIT {
     @Test
     void encontrarClientePorId() {
         final UUID id = UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5");
-        final ClienteDTO clienteDTO = new ClienteDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "Rua A, 123", "1234567890", "joao@example.com", LocalDate.of(1990, 1, 1), "12345678901");
+        final ClienteDTO clienteDTO = new ClienteDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000", "Praça da Sé", "lado ímpar", "Sé", "138", "1234567890", "joao@example.com", LocalDate.of(1990, 1, 1), "12345678901");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(clienteDTO)
@@ -102,7 +110,11 @@ class ClienteControllerIT {
                 .log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("nome", equalTo(clienteDTO.nome()))
-                .body("endereco", equalTo(clienteDTO.endereco()))
+                .body("cep", equalTo(clienteDTO.cep()))
+                .body("logradouro", equalTo(clienteDTO.logradouro()))
+                .body("complemento", equalTo(clienteDTO.complemento()))
+                .body("bairro", equalTo(clienteDTO.bairro()))
+                .body("numero", equalTo(clienteDTO.numero()))
                 .body("telefone", equalTo(clienteDTO.telefone()))
                 .body("email", equalTo(clienteDTO.email()))
                 .body("dataNascimento", equalTo(clienteDTO.dataNascimento().toString()))
@@ -125,7 +137,8 @@ class ClienteControllerIT {
 
     @Test
     void cadastrarClienteAlreadyExistsException() {
-        final ClienteDTO clienteDTO = new ClienteDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "Rua A, 123", "2737183089", "joao@example.com", LocalDate.of(1990, 1, 1), "91019677031");
+        final ClienteDTO clienteDTO = new ClienteDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000",
+                "Praça da Sé", "lado ímpar", "Sé", "138", "2737183089", "joao@example.com", LocalDate.of(1990, 1, 1), "91019677031");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(clienteDTO)

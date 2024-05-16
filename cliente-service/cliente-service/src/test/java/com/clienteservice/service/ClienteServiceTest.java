@@ -58,7 +58,11 @@ class ClienteServiceTest {
         assertAll(
                 () -> assertThat(result).isNotNull(),
                 () -> assertEquals(result.nome(), clienteDTO.nome()),
-                () -> assertEquals(result.endereco(), clienteDTO.endereco()),
+                () -> assertEquals(result.cep(), clienteDTO.cep()),
+                () -> assertEquals(result.logradouro(), clienteDTO.logradouro()),
+                () -> assertEquals(result.complemento(), clienteDTO.complemento()),
+                () -> assertEquals(result.bairro(), clienteDTO.bairro()),
+                () -> assertEquals(result.numero(), clienteDTO.numero()),
                 () -> assertEquals(result.telefone(), clienteDTO.telefone()),
                 () -> assertEquals(result.email(), clienteDTO.email()),
                 () -> assertEquals(result.dataNascimento(), clienteDTO.dataNascimento()),
@@ -95,7 +99,11 @@ class ClienteServiceTest {
         assertAll(
                 () -> assertThat(result).isNotNull(),
                 () -> assertEquals(result.nome(), clienteDTO.nome()),
-                () -> assertEquals(result.endereco(), clienteDTO.endereco()),
+                () -> assertEquals(result.cep(), clienteDTO.cep()),
+                () -> assertEquals(result.logradouro(), clienteDTO.logradouro()),
+                () -> assertEquals(result.complemento(), clienteDTO.complemento()),
+                () -> assertEquals(result.bairro(), clienteDTO.bairro()),
+                () -> assertEquals(result.numero(), clienteDTO.numero()),
                 () -> assertEquals(result.telefone(), clienteDTO.telefone()),
                 () -> assertEquals(result.email(), clienteDTO.email()),
                 () -> assertEquals(result.dataNascimento(), clienteDTO.dataNascimento()),
@@ -107,13 +115,19 @@ class ClienteServiceTest {
     @Test
     void atualizarCliente() {
         final Cliente cliente = InstanceGeneratorHelper.getCliente();
-        final ClienteDTO clienteDTO =
-                new ClienteDTO(null, "Valentina Mariane Ramos",
-                        "Avenida Parimé Brasil, 891",
-                        "95999878033",
-                        "valentina.mariane.ramos@hotmail.com.br",
-                        LocalDate.now(),
-                        "58235909626");
+        final ClienteDTO clienteDTO = new ClienteDTO(
+                null,
+                "Valentina Mariane Ramos",
+                "01001-000",
+                "Praça da Sé",
+                "lado ímpar",
+                "Sé",
+                "138",
+                "95999878033",
+                "valentina.mariane.ramos@hotmail.com.br",
+                LocalDate.now(),
+                "58235909626"
+        );
 
         when(this.clienteRepository.findById(any(UUID.class))).thenReturn(Optional.of(cliente));
         when(this.clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
@@ -123,7 +137,11 @@ class ClienteServiceTest {
         assertAll(
                 () -> assertThat(result).isNotNull(),
                 () -> assertEquals(result.nome(), clienteDTO.nome()),
-                () -> assertEquals(result.endereco(), clienteDTO.endereco()),
+                () -> assertEquals(result.cep(), clienteDTO.cep()),
+                () -> assertEquals(result.logradouro(), clienteDTO.logradouro()),
+                () -> assertEquals(result.complemento(), clienteDTO.complemento()),
+                () -> assertEquals(result.bairro(), clienteDTO.bairro()),
+                () -> assertEquals(result.numero(), clienteDTO.numero()),
                 () -> assertEquals(result.telefone(), clienteDTO.telefone()),
                 () -> assertEquals(result.email(), clienteDTO.email()),
                 () -> assertEquals(result.dataNascimento(), clienteDTO.dataNascimento()),

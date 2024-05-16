@@ -21,7 +21,18 @@ public class Cliente {
     private String nome;
 
     @Column(nullable = false)
-    private String endereco;
+    private String cep;
+
+    @Column(nullable = false)
+    private String logradouro;
+
+    private String complemento;
+
+    @Column(nullable = false)
+    private String bairro;
+
+    @Column(nullable = false)
+    private String numero;
 
     @Column(nullable = false)
     private String telefone;
