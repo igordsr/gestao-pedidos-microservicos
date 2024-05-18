@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -97,6 +98,25 @@ class ProdutoServiceTest {
                 () -> assertEquals(result.preco(), produtoDTO.preco()),
                 () -> assertEquals(result.qtdEstoque(), produtoDTO.qtdEstoque()),
                 () -> verify(this.produtoRepository, times(1)).findById(any(UUID.class))
+        );
+    }
+
+    @Test
+    void encontrarProdutosPorIds() {
+        List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
+        List<Produto> produtos = List.of(InstanceGeneratorHelper.getProduto(), InstanceGeneratorHelper.getProduto());
+        List<ProdutoDTO> expectedProdutosDTOs = produtos.stream()
+                .map(ProdutoDTO::getInstance)
+                .collect(Collectors.toList());
+
+        when(this.produtoRepository.findAllById(ids)).thenReturn(produtos);
+
+        List<ProdutoDTO> result = this.produtoService.encontrarProdutosPorIds(ids);
+
+        assertAll(
+                () -> assertThat(result).isNotNull().isNotEmpty().hasSize(produtos.size()),
+                () -> assertThat(result).containsExactlyInAnyOrderElementsOf(expectedProdutosDTOs),
+                () -> verify(this.produtoRepository, times(1)).findAllById(ids)
         );
     }
 
