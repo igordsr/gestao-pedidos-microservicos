@@ -162,7 +162,7 @@ class ProdutoControllerIT {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body("message", equalTo("Produto PRODUTO 1 já está cadastrado no sistema."))
+                .body("message", equalTo("O registro [Produto 1] que você está tentando criar já existe na base de dados."))
                 .body("path", equalTo("/produto"));
     }
 
@@ -179,7 +179,7 @@ class ProdutoControllerIT {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", equalTo("Produto não foi encontrado"))
+                .body("message", equalTo("O registro [66342f0e-24fb-4cea-812f-dffbe915f180] não foi encontrado encontrado."))
                 .body("path", equalTo(String.format("/produto/%s", id)));
     }
 
@@ -193,7 +193,7 @@ class ProdutoControllerIT {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", equalTo("Produto não foi encontrado"))
+                .body("message", equalTo("O registro [66342f0e-24fb-4cea-812f-dffbe915f180] não foi encontrado encontrado."))
                 .body("path", equalTo(String.format("/produto/%s", id)));
     }
 
@@ -204,11 +204,11 @@ class ProdutoControllerIT {
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .patch("/produto/{id}/decrementarEstoque/{quantidade}", id, 450)
+                .put("/produto/{id}/decrementarEstoque/{quantidade}", id, 450)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
-                .body("message", equalTo("Não há unidades suficientes do produto PRODUTO 2 para a demanda solicitada"))
+                .body("message", equalTo("A solicitação não pôde ser processada devido a dados inválidos ou à violação das regras de negócio."))
                 .body("path", equalTo(String.format("/produto/%s/decrementarEstoque/%s", id, "450")));
     }
 }

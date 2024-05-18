@@ -120,7 +120,7 @@ public class ProdutoController {
         return new ResponseEntity<>(produtoDTOList, HttpStatus.OK);
     }
 
-    @PatchMapping(value = "/{id}/decrementarEstoque/{quantidade}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}/decrementarEstoque/{quantidade}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Decrementar estoque", description = "Este método permite diminuir uma quantidade específica de um produto.", method = "PATCH")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Venda do produto realizada com sucesso"),

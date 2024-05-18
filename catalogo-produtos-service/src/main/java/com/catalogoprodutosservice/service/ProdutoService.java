@@ -9,7 +9,6 @@ import com.catalogoprodutosservice.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ public class ProdutoService {
     }
 
     public ProdutoDTO cadastrar(final ProdutoDTO produtoDTO) {
-        Assert.notNull(produtoDTO, "O objeto produtoDTO não pode ser null");
         Optional<Produto> produtoOptional = this.produtoRepository.findByNomeIgnoreCase(produtoDTO.nome());
         if (produtoOptional.isPresent()) {
             throw new RegistroJaExisteException(produtoOptional.get().getNome());
@@ -75,7 +73,8 @@ public class ProdutoService {
     public ProdutoDTO decrementarEstoque(UUID id, int quantidade) {
         Produto produto = this.findById(id);
         if (produto.getQtdEstoque() < quantidade) {
-            throw new EntidadeNaoProcessavelException(produto.getNome());
+            final String resp = "Não há quantidade [%s] suficiente disponível do produto [%s] para a venda solicitada. Por favor, ajuste a quantidade ou escolha outro produto";
+            throw new EntidadeNaoProcessavelException(String.format(resp, produto.getQtdEstoque(), produto.getNome()));
         }
         int novoEstoque = produto.getQtdEstoque() - quantidade;
         produto.setQtdEstoque(novoEstoque);
