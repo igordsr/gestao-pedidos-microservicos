@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
+import static org.springframework.data.util.Predicates.isTrue;
 
 class PedidoUseCaseContractTest {
     @Mock
@@ -72,6 +73,7 @@ class PedidoUseCaseContractTest {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
         final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.AGUARDANDO_PAGAMENTO);
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
+        when(this.materProduto.diminuirQuantidadeProdutoEstoque(any(UUID.class), any(Integer.class))).thenReturn(InstanceGeneratorHelper.getItem());
         when(this.manterPedido.atualizar(any(Pedido.class))).thenReturn(pedido);
 
         final Pedido result = this.pedidoUseCase.liquidarPedido(identificador);
@@ -221,6 +223,63 @@ class PedidoUseCaseContractTest {
         assertAll(
                 () -> assertThatThrownBy(() -> this.pedidoUseCase.entregar(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
                 () -> verify(this.manterPedido, times(0)).atualizar(any(Pedido.class))
+        );
+    }
+
+    @Test
+    void liquidarPedidoEntidadeNaoProcessavelException() {
+        final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
+        final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.PAGO);
+        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
+        assertAll(
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.liquidarPedido(identificador))
+                        .isInstanceOf(CustomException.class)
+                        .hasMessage("A solicitação não pôde ser processada devido a dados inválidos ou à violação das regras de negócio.")
+                        .satisfies(exception  ->{
+                            final CustomException customException = (CustomException) exception;
+                            final List<String> details = customException.getDetails();
+                            assertThat(details.stream().anyMatch(detail -> detail.equals("Pedido já foi pago anteriormente e está no status de PAGO"))).isTrue();
+                        }),
+                () -> verify(this.manterPedido, times(0)).atualizar(any(Pedido.class)),
+                () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class))
+        );
+    }
+
+    @Test
+    void enviarEntidadeNaoProcessavelException() {
+        final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
+        final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.AGUARDANDO_PAGAMENTO);
+        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
+        assertAll(
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.enviar(identificador))
+                        .isInstanceOf(CustomException.class)
+                        .hasMessage("A solicitação não pôde ser processada devido a dados inválidos ou à violação das regras de negócio.")
+                        .satisfies(exception  ->{
+                            final CustomException customException = (CustomException) exception;
+                            final List<String> details = customException.getDetails();
+                            assertThat(details.stream().anyMatch(detail -> detail.equals("Este pedido não pode ser liberado para transporte pois está pendente de pagamento."))).isTrue();
+                        }),
+                () -> verify(this.manterPedido, times(0)).atualizar(any(Pedido.class)),
+                () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class))
+        );
+    }
+
+    @Test
+    void entregarEntidadeNaoProcessavelException() {
+        final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
+        final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.AGUARDANDO_PAGAMENTO);
+        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
+        assertAll(
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.entregar(identificador))
+                        .isInstanceOf(CustomException.class)
+                        .hasMessage("A solicitação não pôde ser processada devido a dados inválidos ou à violação das regras de negócio.")
+                        .satisfies(exception  ->{
+                            final CustomException customException = (CustomException) exception;
+                            final List<String> details = customException.getDetails();
+                            assertThat(details.stream().anyMatch(detail -> detail.equals("Este pedido não pode ser liberado para entrega pois está pendente de pagamento."))).isTrue();
+                        }),
+                () -> verify(this.manterPedido, times(0)).atualizar(any(Pedido.class)),
+                () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class))
         );
     }
 

@@ -1,5 +1,8 @@
 package com.pedidos.service.domain.model;
 
+import lombok.Getter;
+
+@Getter
 public enum StatusPedido {
     AGUARDANDO_PAGAMENTO(1, "AGUARDANDO PAGAMENTO"),
     PAGO(2, "PAGO"),
@@ -13,13 +16,5 @@ public enum StatusPedido {
     StatusPedido(int codigo, String nome) {
         this.codigo = codigo;
         this.descricao = nome;
-    }
-
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public String getDescricao() {
-        return descricao;
     }
 }

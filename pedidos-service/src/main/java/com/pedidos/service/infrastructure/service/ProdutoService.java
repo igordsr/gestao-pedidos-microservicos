@@ -1,6 +1,7 @@
 package com.pedidos.service.infrastructure.service;
 
 import com.pedidos.service.domain.contract.IProdutoContract;
+import com.pedidos.service.domain.exception.EntidadeNaoProcessavelException;
 import com.pedidos.service.domain.model.Item;
 import com.pedidos.service.infrastructure.feign.Produto;
 import com.pedidos.service.infrastructure.feign.ProdutoServiceClient;
@@ -29,5 +30,11 @@ public class ProdutoService implements IProdutoContract {
             itensFound.add(item);
         }
         return itensFound;
+    }
+
+    @Override
+    public Item diminuirQuantidadeProdutoEstoque(UUID id, Integer quantidade) throws EntidadeNaoProcessavelException {
+        final Produto produto = this.produtoServiceClient.decrementarEstoque(id, quantidade);
+        return new Item(produto.id(), produto.qtdEstoque());
     }
 }

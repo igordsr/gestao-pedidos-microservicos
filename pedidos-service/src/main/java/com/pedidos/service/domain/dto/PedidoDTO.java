@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 public record PedidoDTO(
-        @Schema(example = "Camiseta de algodão com estampa")
-        @NotNull(message = "Descrição do produto não pode estar em nulo.")
         UUID identificador,
         @Schema(example = "Camiseta de algodão com estampa")
         @NotNull(message = "Descrição do produto não pode estar em nulo.")

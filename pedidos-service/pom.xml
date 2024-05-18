@@ -83,6 +83,10 @@
             <artifactId>feign-jackson</artifactId>
             <version>12.2</version> <!-- Use a versão apropriada. A versão 12.2 é a mais recente na data de corte do conhecimento. -->
         </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
