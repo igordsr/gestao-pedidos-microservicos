@@ -1,6 +1,6 @@
-package com.catalogoprodutosservice.controller.exception;
+package com.pedidos.service.application.controller;
 
-import com.catalogoprodutosservice.controller.exception.modal.*;
+import com.pedidos.service.domain.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +41,6 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(err.getCode()).body(err);
     }
 
-    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomException> validationMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest httpServletRequest) {
         final List<String> mensagens = new ArrayList<>();

@@ -1,9 +1,8 @@
 package com.catalogoprodutosservice.service;
 
-
-import com.catalogoprodutosservice.controller.exception.model.ProdutoAlreadyExistsException;
-import com.catalogoprodutosservice.controller.exception.model.ProdutoInsuficienteException;
-import com.catalogoprodutosservice.controller.exception.model.ProdutoNotFoundException;
+import com.catalogoprodutosservice.controller.exception.modal.EntidadeNaoProcessavelException;
+import com.catalogoprodutosservice.controller.exception.modal.RegistroJaExisteException;
+import com.catalogoprodutosservice.controller.exception.modal.RegistroNaoEncontradoException;
 import com.catalogoprodutosservice.dto.ProdutoDTO;
 import com.catalogoprodutosservice.model.Produto;
 import com.catalogoprodutosservice.repository.ProdutoRepository;
@@ -181,31 +180,31 @@ class ProdutoServiceTest {
         when(this.produtoRepository.findByNomeIgnoreCase(anyString())).thenReturn(Optional.of(produto));
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.produtoService.cadastrar(produtoDTO)).isInstanceOf(ProdutoAlreadyExistsException.class).hasMessage("Produto CAMISETA já está cadastrado no sistema."),
+                () -> assertThatThrownBy(() -> this.produtoService.cadastrar(produtoDTO)).isInstanceOf(RegistroJaExisteException.class).hasMessage("O registro [Camiseta] que você está tentando criar já existe na base de dados."),
                 () -> verify(this.produtoRepository, times(1)).findByNomeIgnoreCase(anyString()),
                 () -> verify(this.produtoRepository, times(0)).save(any())
         );
     }
 
     @Test
-    void atualizarProdutoNotFoundException() {
-        final UUID uuid = UUID.randomUUID();
+    void atualizarRegistroNaoEncontradoExceptionxception() {
+        final UUID uuid = UUID.fromString("5160e5ca-5912-4592-912c-3cfe6f73aa41");
         final ProdutoDTO produtoDTO = InstanceGeneratorHelper.getProdutoDTO();
         when(this.produtoRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.produtoService.atualizarProduto(uuid, produtoDTO)).isInstanceOf(ProdutoNotFoundException.class).hasMessage("Produto não foi encontrado"),
+                () -> assertThatThrownBy(() -> this.produtoService.atualizarProduto(uuid, produtoDTO)).isInstanceOf(RegistroNaoEncontradoException.class).hasMessage("O registro [5160e5ca-5912-4592-912c-3cfe6f73aa41] não foi encontrado encontrado."),
                 () -> verify(this.produtoRepository, times(1)).findById(any(UUID.class)),
                 () -> verify(this.produtoRepository, times(0)).save(any())
         );
     }
 
     @Test
-    void deletarProdutoNotFoundException() {
-        final UUID uuid = UUID.randomUUID();
+    void deletarRegistroNaoEncontradoExceptionxception() {
+        final UUID uuid = UUID.fromString("b6803068-eea8-4fd0-91c7-af343f27d4d0");
         when(this.produtoRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
         assertAll(
-                () -> assertThatThrownBy(() -> this.produtoService.deletarProduto(uuid)).isInstanceOf(ProdutoNotFoundException.class).hasMessage("Produto não foi encontrado"),
+                () -> assertThatThrownBy(() -> this.produtoService.deletarProduto(uuid)).isInstanceOf(RegistroNaoEncontradoException.class).hasMessage("O registro [b6803068-eea8-4fd0-91c7-af343f27d4d0] não foi encontrado encontrado."),
                 () -> verify(this.produtoRepository, times(1)).findById(any(UUID.class)),
                 () -> verify(this.produtoRepository, times(0)).save(any())
         );
@@ -218,7 +217,7 @@ class ProdutoServiceTest {
         when(this.produtoRepository.findById(any(UUID.class))).thenReturn(Optional.of(produto));
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.produtoService.decrementarEstoque(produto.getId(), quantidade)).isInstanceOf(ProdutoInsuficienteException.class).hasMessage("Não há unidades suficientes do produto CAMISETA para a demanda solicitada"),
+                () -> assertThatThrownBy(() -> this.produtoService.decrementarEstoque(produto.getId(), quantidade)).isInstanceOf(EntidadeNaoProcessavelException.class).hasMessage("A solicitação não pôde ser processada devido a dados inválidos ou à violação das regras de negócio."),
                 () -> verify(this.produtoRepository, times(1)).findById(any(UUID.class)),
                 () -> verify(this.produtoRepository, times(0)).save(any())
         );

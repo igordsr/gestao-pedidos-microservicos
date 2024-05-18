@@ -1,7 +1,7 @@
 package com.clienteservice.service;
 
-import com.clienteservice.controller.exception.model.ClienteAlreadyExistsException;
-import com.clienteservice.controller.exception.model.ClienteNotFoundException;
+import com.clienteservice.controller.exception.modal.RegistroJaExisteException;
+import com.clienteservice.controller.exception.modal.RegistroNaoEncontradoException;
 import com.clienteservice.dto.ClienteDTO;
 import com.clienteservice.model.Cliente;
 import com.clienteservice.repository.ClienteRepository;
@@ -28,7 +28,7 @@ public class ClienteService {
         Assert.notNull(clienteDTO, "O objeto clienteDTO não pode ser null");
         Optional<Cliente> clienteOptional = this.clienteRepository.findByEmailOrCpf(clienteDTO.email(), clienteDTO.cpf());
         if (clienteOptional.isPresent()) {
-            throw new ClienteAlreadyExistsException(clienteOptional.get().getNome());
+            throw new RegistroJaExisteException(clienteOptional.get().getNome());
         }
         final Cliente cliente = clienteRepository.save(clienteDTO.toCliente());
         return ClienteDTO.getInstance(cliente);
@@ -39,13 +39,11 @@ public class ClienteService {
     }
 
     public ClienteDTO encontrarClientePorId(UUID id) {
-        Assert.notNull(id, "O objeto id não pode ser null");
         final Cliente cliente = this.findById(id);
         return ClienteDTO.getInstance(cliente);
     }
 
     public ClienteDTO atualizarCliente(final UUID id, final ClienteDTO clienteDTO) {
-        Assert.notNull(id, "O objeto id não pode ser null");
         Assert.notNull(clienteDTO, "O objeto clienteDTO não pode ser null");
         Cliente cliente = this.findById(id);
         cliente.setNome(clienteDTO.nome());
@@ -71,6 +69,6 @@ public class ClienteService {
 
     private Cliente findById(UUID id) {
         Assert.notNull(id, "O objeto id não pode ser null");
-        return this.clienteRepository.findById(id).orElseThrow(ClienteNotFoundException::new);
+        return this.clienteRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException(id.toString()));
     }
 }

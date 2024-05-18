@@ -3,8 +3,8 @@ package com.pedidos.service.domain.usecase;
 import com.pedidos.service.domain.contract.IClienteContract;
 import com.pedidos.service.domain.contract.IManderDadosPedidoContract;
 import com.pedidos.service.domain.contract.IProdutoContract;
-import com.pedidos.service.domain.exception.GestaoDePedidosApplicationException;
-import com.pedidos.service.domain.exception.PedidoNotFoundException;
+import com.pedidos.service.domain.exception.CustomException;
+import com.pedidos.service.domain.exception.RegistroNaoEncontradoException;
 import com.pedidos.service.domain.model.Item;
 import com.pedidos.service.domain.model.Pedido;
 import com.pedidos.service.domain.model.StatusPedido;
@@ -160,7 +160,7 @@ class PedidoUseCaseContractTest {
         when(this.materProduto.consultarProdutos(anyList())).thenReturn(List.of(item));
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.pedidoUseCase.cadastrar(pedido)).isInstanceOf(GestaoDePedidosApplicationException.class).hasMessage("NÃO HÁ UNIDADES SUFICIENTES DO PRODUTO 232D0CE3-1FFD-4B22-91D6-EE6E45834167 PARA A DEMANDA SOLICITADA"),
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.cadastrar(pedido)).isInstanceOf(CustomException.class).hasMessage("A solicitação não pôde ser processada devido a dados inválidos ou à violação das regras de negócio."),
                 () -> verify(this.manterCliente, times(1)).verificarExistencia(any(UUID.class)),
                 () -> verify(this.materProduto, times(1)).consultarProdutos(anyList()),
                 () -> verify(this.manterPedido, times(0)).cadastrar(any(Pedido.class))
@@ -174,7 +174,7 @@ class PedidoUseCaseContractTest {
         when(this.materProduto.consultarProdutos(anyList())).thenReturn(List.of());
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.pedidoUseCase.cadastrar(pedido)).isInstanceOf(GestaoDePedidosApplicationException.class).hasMessage("PRODUTO 232D0CE3-1FFD-4B22-91D6-EE6E45834167 NÃO FOI ENCONTRADO"),
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.cadastrar(pedido)).isInstanceOf(CustomException.class).hasMessage("O registro [232d0ce3-1ffd-4b22-91d6-ee6e45834167] não foi encontrado."),
                 () -> verify(this.manterCliente, times(1)).verificarExistencia(any(UUID.class)),
                 () -> verify(this.materProduto, times(1)).consultarProdutos(anyList()),
                 () -> verify(this.manterPedido, times(0)).cadastrar(any(Pedido.class))
@@ -182,44 +182,44 @@ class PedidoUseCaseContractTest {
     }
 
     @Test
-    void liquidarPedidoPedidoNotFoundException() {
+    void liquidarPedidoRegistroNaoEncontradoException() {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
-        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new PedidoNotFoundException(identificador.toString()));
+        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new RegistroNaoEncontradoException(identificador.toString()));
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.pedidoUseCase.liquidarPedido(identificador)).isInstanceOf(GestaoDePedidosApplicationException.class).hasMessage("PEDIDO 30F88A6E-A701-4EDA-B812-5053CCB419ED NÃO FOI ENCONTRADO"),
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.liquidarPedido(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
                 () -> verify(this.manterPedido, times(0)).atualizar(any(Pedido.class))
         );
     }
 
     @Test
-    void consultarPedidoPedidoNotFoundException() {
+    void consultarPedidoRegistroNaoEncontradoException() {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
-        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new PedidoNotFoundException(identificador.toString()));
+        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new RegistroNaoEncontradoException(identificador.toString()));
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.pedidoUseCase.consultarPeloIdentificador(identificador)).isInstanceOf(GestaoDePedidosApplicationException.class).hasMessage("PEDIDO 30F88A6E-A701-4EDA-B812-5053CCB419ED NÃO FOI ENCONTRADO"),
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.consultarPeloIdentificador(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class))
         );
     }
 
     @Test
-    void enviarPedidoPedidoNotFoundException() {
+    void enviarPedidoRegistroNaoEncontradoException() {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
-        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new PedidoNotFoundException(identificador.toString()));
+        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new RegistroNaoEncontradoException(identificador.toString()));
         assertAll(
-                () -> assertThatThrownBy(() -> this.pedidoUseCase.enviar(identificador)).isInstanceOf(GestaoDePedidosApplicationException.class).hasMessage("PEDIDO 30F88A6E-A701-4EDA-B812-5053CCB419ED NÃO FOI ENCONTRADO"),
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.enviar(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
                 () -> verify(this.manterPedido, times(0)).atualizar(any(Pedido.class))
         );
     }
 
     @Test
-    void entregarPedidoPedidoNotFoundException() {
+    void entregarPedidoRegistroNaoEncontradoException() {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
-        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new PedidoNotFoundException(identificador.toString()));
+        when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new RegistroNaoEncontradoException(identificador.toString()));
         assertAll(
-                () -> assertThatThrownBy(() -> this.pedidoUseCase.entregar(identificador)).isInstanceOf(GestaoDePedidosApplicationException.class).hasMessage("PEDIDO 30F88A6E-A701-4EDA-B812-5053CCB419ED NÃO FOI ENCONTRADO"),
+                () -> assertThatThrownBy(() -> this.pedidoUseCase.entregar(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
                 () -> verify(this.manterPedido, times(0)).atualizar(any(Pedido.class))
         );
     }

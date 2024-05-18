@@ -1,7 +1,7 @@
 package com.clienteservice.service;
 
-import com.clienteservice.controller.exception.model.ClienteAlreadyExistsException;
-import com.clienteservice.controller.exception.model.ClienteNotFoundException;
+import com.clienteservice.controller.exception.modal.RegistroJaExisteException;
+import com.clienteservice.controller.exception.modal.RegistroNaoEncontradoException;
 import com.clienteservice.dto.ClienteDTO;
 import com.clienteservice.model.Cliente;
 import com.clienteservice.repository.ClienteRepository;
@@ -169,7 +169,7 @@ class ClienteServiceTest {
         when(this.clienteRepository.findByEmailOrCpf(anyString(), anyString())).thenReturn(Optional.of(cliente));
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.clienteService.cadastrar(clienteDTO)).isInstanceOf(ClienteAlreadyExistsException.class).hasMessage("Cliente ISADORA BIANCA MAITÊ MARTINS já está cadastrado no sistema."),
+                () -> assertThatThrownBy(() -> this.clienteService.cadastrar(clienteDTO)).isInstanceOf(RegistroJaExisteException.class).hasMessage("O registro [Isadora Bianca Maitê Martins] que você está tentando criar já existe na base de dados."),
                 () -> verify(this.clienteRepository, times(1)).findByEmailOrCpf(anyString(), anyString()),
                 () -> verify(this.clienteRepository, times(0)).save(any())
         );
@@ -177,12 +177,12 @@ class ClienteServiceTest {
 
     @Test
     void atualizarClienteNotFoundException() {
-        final UUID uuid = UUID.randomUUID();
+        final UUID uuid = UUID.fromString("e4815b1c-4a09-48a5-ac18-90baf00afc22");
         final ClienteDTO clienteDTO = InstanceGeneratorHelper.getClienteDTO();
         when(this.clienteRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
         assertAll(
-                () -> assertThatThrownBy(() -> this.clienteService.atualizarCliente(uuid, clienteDTO)).isInstanceOf(ClienteNotFoundException.class).hasMessage("Cliente não foi encontrado"),
+                () -> assertThatThrownBy(() -> this.clienteService.atualizarCliente(uuid, clienteDTO)).isInstanceOf(RegistroNaoEncontradoException.class).hasMessage("O registro [e4815b1c-4a09-48a5-ac18-90baf00afc22] não foi encontrado encontrado."),
                 () -> verify(this.clienteRepository, times(1)).findById(any(UUID.class)),
                 () -> verify(this.clienteRepository, times(0)).save(any())
         );
@@ -190,10 +190,10 @@ class ClienteServiceTest {
 
     @Test
     void deletarClienteNotFoundException() {
-        final UUID uuid = UUID.randomUUID();
+        final UUID uuid = UUID.fromString("82547121-1019-4e0a-96d2-cd18b4c9e17d");
         when(this.clienteRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
         assertAll(
-                () -> assertThatThrownBy(() -> this.clienteService.deletarCliente(uuid)).isInstanceOf(ClienteNotFoundException.class).hasMessage("Cliente não foi encontrado"),
+                () -> assertThatThrownBy(() -> this.clienteService.deletarCliente(uuid)).isInstanceOf(RegistroNaoEncontradoException.class).hasMessage("O registro [82547121-1019-4e0a-96d2-cd18b4c9e17d] não foi encontrado encontrado."),
                 () -> verify(this.clienteRepository, times(1)).findById(any(UUID.class)),
                 () -> verify(this.clienteRepository, times(0)).save(any())
         );

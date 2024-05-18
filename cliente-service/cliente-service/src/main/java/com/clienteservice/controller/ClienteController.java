@@ -1,6 +1,6 @@
 package com.clienteservice.controller;
 
-import com.clienteservice.controller.exception.ClienteServiceApplicationError;
+import com.clienteservice.controller.exception.modal.CustomException;
 import com.clienteservice.dto.ClienteDTO;
 import com.clienteservice.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,9 +35,9 @@ public class ClienteController {
     @Operation(summary = "Cadastro de Cliente", description = "Os clientes podem se registrar no sistema, associando seus dados pessoais.", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cadastro do cliente realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<ClienteDTO> cadastrarCliente(@RequestBody @Valid ClienteDTO clienteDTO) {
         clienteDTO = this.clienteService.cadastrar(clienteDTO);
@@ -48,9 +48,9 @@ public class ClienteController {
     @Operation(summary = "Atualizar de Cliente", description = "Os clientes podem atualizar os dados cadastrarei no sistema", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Atualização dos dados cadastrais do cliente realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<ClienteDTO> atualizarCliente(@PathVariable UUID id, @RequestBody @Valid ClienteDTO clienteDTO) {
         clienteDTO = this.clienteService.atualizarCliente(id, clienteDTO);
@@ -61,9 +61,9 @@ public class ClienteController {
     @Operation(summary = "Deletar cliente pelo id", description = "Esté metodo tem como finalidade permitir deletar de forma logica as informações cadastrais do cliente.", method = "Delete")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Exclusão do cliente realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         this.clienteService.deletarCliente(id);
@@ -74,9 +74,9 @@ public class ClienteController {
     @Operation(summary = "Consultar dados do cliente pelo id", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do cliente.", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta do cliente realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<ClienteDTO> encontrarClientePorId(@PathVariable UUID id) {
         ClienteDTO clienteDTO = this.clienteService.encontrarClientePorId(id);
@@ -87,9 +87,9 @@ public class ClienteController {
     @Operation(summary = "Listar todos os clientes", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do cliente de todos o clientes.", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta do cliente realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = ClienteServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo cliente", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<List<ClienteDTO>> listarTodosOsClientes() {
         List<ClienteDTO> clienteDTOList = this.clienteService.listarClientes();
