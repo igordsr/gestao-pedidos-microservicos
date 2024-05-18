@@ -123,7 +123,7 @@ class ProdutoControllerIT {
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .patch("/produto/{id}/decrementarEstoque/{quantidade}", id, 100)
+                .put("/produto/{id}/decrementarEstoque/{quantidade}", id, 100)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value())
