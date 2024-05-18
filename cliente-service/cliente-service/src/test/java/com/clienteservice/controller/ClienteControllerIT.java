@@ -147,7 +147,7 @@ class ClienteControllerIT {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body("message", equalTo("Cliente JOÃO SILVA já está cadastrado no sistema."))
+                .body("message", equalTo("O registro [João Silva] que você está tentando criar já existe na base de dados."))
                 .body("path", equalTo("/cliente"));
     }
 
@@ -164,7 +164,7 @@ class ClienteControllerIT {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", equalTo("Cliente não foi encontrado"))
+                .body("message", equalTo("O registro [66342f0e-24fb-4cea-812f-dffbe915f180] não foi encontrado encontrado."))
                 .body("path", equalTo(String.format("/cliente/%s", id)));
     }
 
@@ -178,7 +178,7 @@ class ClienteControllerIT {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", equalTo("Cliente não foi encontrado"))
+                .body("message", equalTo("O registro [66342f0e-24fb-4cea-812f-dffbe915f180] não foi encontrado encontrado."))
                 .body("path", equalTo(String.format("/cliente/%s", id)));
     }
 }

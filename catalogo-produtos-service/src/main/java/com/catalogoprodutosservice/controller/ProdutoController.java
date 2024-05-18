@@ -1,6 +1,6 @@
 package com.catalogoprodutosservice.controller;
 
-import com.catalogoprodutosservice.controller.exception.CatalogoProdutosServiceApplicationError;
+import com.catalogoprodutosservice.controller.exception.modal.CustomException;
 import com.catalogoprodutosservice.dto.ProdutoDTO;
 import com.catalogoprodutosservice.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,9 +46,9 @@ public class ProdutoController {
     @Operation(summary = "Cadastro de Produto", description = "Esté metodo tem como finalidade permitir o cadastro de produtos no sistema, associando os dados do produto.", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cadastro do produto realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<ProdutoDTO> cadastrarProduto(@RequestBody @Valid ProdutoDTO produtoDTO) {
         produtoDTO = this.produtoService.cadastrar(produtoDTO);
@@ -59,9 +59,9 @@ public class ProdutoController {
     @Operation(summary = "Atualizar de Produto", description = "Esté metodo tem como finalidade permitir atualizar os dados cadastrais do produtos no sistema", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Atualização dos dados cadastrais do produto realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<ProdutoDTO> atualizarProduto(@PathVariable UUID id, @RequestBody @Valid ProdutoDTO produtoDTO) {
         produtoDTO = this.produtoService.atualizarProduto(id, produtoDTO);
@@ -72,9 +72,9 @@ public class ProdutoController {
     @Operation(summary = "Deletar produto pelo id", description = "Esté metodo tem como finalidade permitir deletar de forma logica as informações cadastrais do produto.", method = "Delete")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Exclusão do produto realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         this.produtoService.deletarProduto(id);
@@ -85,9 +85,9 @@ public class ProdutoController {
     @Operation(summary = "Consultar dados do produto pelo id", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do produto.", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta do produto realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<ProdutoDTO> encontrarProdutoPorId(@PathVariable UUID id) {
         ProdutoDTO produtoDTO = this.produtoService.encontrarProdutoPorId(id);
@@ -98,9 +98,9 @@ public class ProdutoController {
     @Operation(summary = "Consultar dados do produto pelo id", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do produto.", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta do produto realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<List<ProdutoDTO>> encontrarProdutosPorIds(@PathVariable @NotEmpty List<UUID> id) {
         List<ProdutoDTO> produtoDTO = this.produtoService.encontrarProdutosPorIds(id);
@@ -111,9 +111,9 @@ public class ProdutoController {
     @Operation(summary = "Listar todos os produtos", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais de todos o produtos.", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta do produto realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CatalogoProdutosServiceApplicationError.class))})
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca pelo produto", content = {@Content(schema = @Schema(implementation = CustomException.class))})
     })
     public ResponseEntity<List<ProdutoDTO>> listarTodosOsProdutos() {
         List<ProdutoDTO> produtoDTOList = this.produtoService.listarProdutos();

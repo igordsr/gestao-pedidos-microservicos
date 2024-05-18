@@ -78,6 +78,11 @@
             <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jackson</artifactId>
+            <version>12.2</version> <!-- Use a versão apropriada. A versão 12.2 é a mais recente na data de corte do conhecimento. -->
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

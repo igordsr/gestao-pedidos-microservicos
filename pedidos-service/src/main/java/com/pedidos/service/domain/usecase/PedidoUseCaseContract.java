@@ -4,10 +4,9 @@ import com.pedidos.service.domain.contract.IClienteContract;
 import com.pedidos.service.domain.contract.IManderDadosPedidoContract;
 import com.pedidos.service.domain.contract.IPedidoContract;
 import com.pedidos.service.domain.contract.IProdutoContract;
-import com.pedidos.service.domain.exception.GestaoDePedidosApplicationException;
-import com.pedidos.service.domain.exception.PedidoNotFoundException;
-import com.pedidos.service.domain.exception.ProdutoInsuficienteException;
-import com.pedidos.service.domain.exception.ProdutoNotFoundException;
+import com.pedidos.service.domain.exception.CustomException;
+import com.pedidos.service.domain.exception.EntidadeNaoProcessavelException;
+import com.pedidos.service.domain.exception.RegistroNaoEncontradoException;
 import com.pedidos.service.domain.model.Item;
 import com.pedidos.service.domain.model.Pedido;
 import com.pedidos.service.domain.model.StatusPedido;
@@ -27,12 +26,12 @@ public final class PedidoUseCaseContract implements IPedidoContract {
     }
 
     @Override
-    public Pedido consultarPeloIdentificador(UUID identificador) throws PedidoNotFoundException {
+    public Pedido consultarPeloIdentificador(UUID identificador) throws RegistroNaoEncontradoException {
         return this.manterPedido.consultarPeloIdentificador(identificador);
     }
 
     @Override
-    public Pedido cadastrar(Pedido pedido) throws GestaoDePedidosApplicationException {
+    public Pedido cadastrar(Pedido pedido) throws CustomException {
         this.manterCliente.verificarExistencia(pedido.getCliente());
         final List<Item> produtos = this.materProduto.consultarProdutos(pedido.getItemList().stream().map(Item::getProduto).toList());
         this.verificarDisponibilidadeDoProduto(pedido, produtos);
@@ -54,14 +53,14 @@ public final class PedidoUseCaseContract implements IPedidoContract {
     }
 
     @Override
-    public Pedido enviar(UUID identificador) throws PedidoNotFoundException {
+    public Pedido enviar(UUID identificador) throws RegistroNaoEncontradoException {
         final Pedido pedido = this.manterPedido.consultarPeloIdentificador(identificador);
         pedido.setStatusPedido(StatusPedido.AGUARDANDO_ENTREGA);
         return this.manterPedido.atualizar(pedido);
     }
 
     @Override
-    public Pedido entregar(UUID identificador) throws PedidoNotFoundException {
+    public Pedido entregar(UUID identificador) throws CustomException {
         final Pedido pedido = this.manterPedido.consultarPeloIdentificador(identificador);
         pedido.setStatusPedido(StatusPedido.ENTREGUE);
         return this.manterPedido.atualizar(pedido);
@@ -72,22 +71,22 @@ public final class PedidoUseCaseContract implements IPedidoContract {
     }
 
 
-    private void processarItens(final Pedido pedido, final List<Item> produtos) throws GestaoDePedidosApplicationException {
+    private void processarItens(final Pedido pedido, final List<Item> produtos) throws EntidadeNaoProcessavelException {
         for (final Item itemRequerido : pedido.getItemList()) {
             final Item produto = getItemFromList(itemRequerido, produtos);
             if (produto.getQuantidade() < itemRequerido.getQuantidade()) {
-                throw new ProdutoInsuficienteException(produto.getProduto().toString());
+                throw new EntidadeNaoProcessavelException(produto.getProduto().toString());
             }
         }
     }
 
-    private static Item getItemFromList(final Item item, final List<Item> produtos) throws GestaoDePedidosApplicationException {
+    private static Item getItemFromList(final Item item, final List<Item> produtos) throws RegistroNaoEncontradoException {
         for (Item produto : produtos) {
             if (produto.getProduto().equals(item.getProduto())) {
                 return produto;
             }
         }
-        throw new ProdutoNotFoundException(item.getProduto().toString());
+        throw new RegistroNaoEncontradoException(item.getProduto().toString());
     }
 
 }

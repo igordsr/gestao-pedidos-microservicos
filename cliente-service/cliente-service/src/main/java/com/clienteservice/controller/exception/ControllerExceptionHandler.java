@@ -1,11 +1,8 @@
 package com.clienteservice.controller.exception;
 
-import com.clienteservice.controller.exception.model.ClienteAlreadyExistsException;
-import com.clienteservice.controller.exception.model.ClienteNotFoundException;
-import com.clienteservice.controller.exception.model.ClienteServiceApplicationException;
+import com.clienteservice.controller.exception.modal.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,72 +10,60 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
-    private ClienteServiceApplicationError clienteServiceApplicationError = new ClienteServiceApplicationError();
 
-    @ExceptionHandler(ClienteNotFoundException.class)
-    public ResponseEntity<ClienteServiceApplicationError> validationClienteNotFoundException(ClienteNotFoundException err, HttpServletRequest httpServletRequest) {
-        HttpStatus code = HttpStatus.NOT_FOUND;
-        clienteServiceApplicationError.setTimestamp(Instant.now());
-        clienteServiceApplicationError.setStatus(code.value());
-        clienteServiceApplicationError.setError("Entity not Found");
-        clienteServiceApplicationError.setMessage(err.getMessage());
-        clienteServiceApplicationError.setPath(httpServletRequest.getRequestURI());
-
-        return ResponseEntity.status(code).body(this.clienteServiceApplicationError);
+    @ExceptionHandler(RegistroNaoEncontradoException.class)
+    public ResponseEntity<CustomException> validationRegistroNaoEncontradoException(RegistroNaoEncontradoException err, HttpServletRequest httpServletRequest) {
+        return this.toCustomException(err, httpServletRequest);
     }
+
+    @ExceptionHandler(RegistroJaExisteException.class)
+    public ResponseEntity<CustomException> validationRegistroJaExisteException(RegistroJaExisteException err, HttpServletRequest httpServletRequest) {
+        return this.toCustomException(err, httpServletRequest);
+    }
+
+    @ExceptionHandler(EntidadeNaoProcessavelException.class)
+    public ResponseEntity<CustomException> validationEntidadeNaoProcessavelException(EntidadeNaoProcessavelException err, HttpServletRequest httpServletRequest) {
+        return this.toCustomException(err, httpServletRequest);
+    }
+
+    @ExceptionHandler(SolicitacaoInvalidaException.class)
+    public ResponseEntity<CustomException> validationSolicitacaoInvalidaException(SolicitacaoInvalidaException err, HttpServletRequest httpServletRequest) {
+        return this.toCustomException(err, httpServletRequest);
+    }
+
+    @ExceptionHandler(ComunicacaoApiException.class)
+    public ResponseEntity<CustomException> validationRegistroNaoEncontradoException(ComunicacaoApiException err, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.status(err.getCode()).body(err);
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ClienteServiceApplicationError> validation(MethodArgumentNotValidException err, HttpServletRequest httpServletRequest) {
-        HttpStatus code = HttpStatus.BAD_REQUEST;
-        ValidateError validateError = new ValidateError();
-        validateError.setTimestamp(Instant.now());
-        validateError.setStatus(code.value());
-        validateError.setError("Erro de Validação");
-        validateError.setMessage(err.getMessage());
-        validateError.setPath(httpServletRequest.getRequestURI());
-        for (FieldError f : err.getBindingResult().getFieldErrors()) {
-            validateError.addMensagens(f.getField(), f.getDefaultMessage());
+    public ResponseEntity<CustomException> validationMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest httpServletRequest) {
+        final List<String> mensagens = new ArrayList<>();
+        final SolicitacaoInvalidaException err = new SolicitacaoInvalidaException();
+        for (FieldError f : exception.getBindingResult().getFieldErrors()) {
+            String format = String.format("[%s] - %s", f.getField(), f.getDefaultMessage());
+            mensagens.add(format);
         }
-
-        return ResponseEntity.status(code).body(validateError);
-    }
-
-    @ExceptionHandler(ClienteAlreadyExistsException.class)
-    public ResponseEntity<ClienteServiceApplicationError> validationClienteAlreadyExistsException(ClienteAlreadyExistsException err, HttpServletRequest httpServletRequest) {
-        HttpStatus code = HttpStatus.CONFLICT;
-        clienteServiceApplicationError.setTimestamp(Instant.now());
-        clienteServiceApplicationError.setStatus(code.value());
-        clienteServiceApplicationError.setMessage(err.getMessage());
-        clienteServiceApplicationError.setPath(httpServletRequest.getRequestURI());
-        return ResponseEntity.status(code).body(this.clienteServiceApplicationError);
-    }
-
-    @ExceptionHandler(ClienteServiceApplicationException.class)
-    public ResponseEntity<ClienteServiceApplicationError> validation(ClienteServiceApplicationException err, HttpServletRequest httpServletRequest) {
-        HttpStatus code = HttpStatus.BAD_REQUEST;
-        clienteServiceApplicationError.setTimestamp(Instant.now());
-        clienteServiceApplicationError.setStatus(code.value());
-        clienteServiceApplicationError.setMessage(err.getMessage());
-        clienteServiceApplicationError.setPath(httpServletRequest.getRequestURI());
-        return ResponseEntity.status(code).body(this.clienteServiceApplicationError);
+        err.setDetails(mensagens);
+        return this.toCustomException(err, httpServletRequest);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ClienteServiceApplicationError> validation(DataIntegrityViolationException ex, WebRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        String errorMessage = "Ocorreu um erro ao processar a solicitação.";
-
-        ClienteServiceApplicationError standardError = new ClienteServiceApplicationError();
-        standardError.setTimestamp(Instant.now());
-        standardError.setStatus(HttpStatus.CONFLICT.value());
-        standardError.setError("Já existe um registro com os mesmos dados. Por favor, verifique os dados e tente novamente.");
-        standardError.setMessage(errorMessage);
-        standardError.setPath(request.getDescription(false));
-
-        return ResponseEntity.status(status).body(standardError);
+    public ResponseEntity<CustomException> validationDataIntegrityViolationException(DataIntegrityViolationException exception, WebRequest request) {
+        EntidadeNaoProcessavelException err = new EntidadeNaoProcessavelException();
+        return ResponseEntity.status(err.getCode()).body(err);
     }
+
+
+    private ResponseEntity<CustomException> toCustomException(CustomException err, HttpServletRequest httpServletRequest) {
+        err.setPath(httpServletRequest.getRequestURI());
+        return ResponseEntity.status(err.getCode()).body(err);
+    }
+
 }
