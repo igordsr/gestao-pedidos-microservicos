@@ -2,9 +2,51 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/cliente-service" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/logistica-service" isTestSource="false" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.springframework.batch:spring-batch-core:5.1.1" level="project" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Maven: com.h2database:h2:2.2.224" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:32.0.1-jre" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.persistence:jakarta.persistence-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:3.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context:6.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-jpa:3.2.5" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.15.4" level="project" />
+    <orderEntry type="library" name="Maven: io.swagger.core.v3:swagger-annotations-jakarta:2.2.21" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/24.0.0/annotations-24.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Maven: jakarta.validation:jakarta.validation-api:3.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:3.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:3.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-core:6.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:6.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-web:6.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-tx:6.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-core:10.1.20" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate.validator:hibernate-validator:8.0.1.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-core:13.2.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.15.4" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-jackson:12.2" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="0dc96291-556d-477a-b901-2ca8b203b710" />
