@@ -1,4 +1,4 @@
-# Micro serviço de Gerenciamento de Produtos
+# Micro serviço de Gerenciamento de Clientes
 
 - Para executar a Aplicação:
 ```shell
@@ -22,11 +22,11 @@ Informações Adicionais:
 
 Documentação das APIs:
 
-A documentação das APIs pode ser acessada em [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html).
+A documentação das APIs pode ser acessada em [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html).
 
 Gerando uma imagem  da Aplicação com Docker
 ```shell
-docker build -t catalogo-produtos-service-api.jar:latest  .
+docker build -t cliente-service-api:latest  .
 ```
 Executando a Aplicação com Docker
 ```shell
@@ -34,6 +34,6 @@ docker run `
   -e SPRING_DATASOURCE_URL=<valor> `
   -e SPRING_DATASOURCE_USERNAME=<valor> `
   -e SPRING_DATASOURCE_PASSWORD=<valor> `
-  -p 8082:8082 `
-  catalogo-produtos-service-api.jar:latest
+  -p 8081:8081 `
+  cliente-service-api:latest
 ```

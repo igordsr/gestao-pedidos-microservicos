@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.UUID;
 
-@FeignClient(value = "cliente", url = "http://localhost:8081", configuration = FeignConfig.class)
+@FeignClient(value = "cliente", url = "${cliente.service.url}", configuration = FeignConfig.class)
 public interface ClienteServiceClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/cliente/{id}", produces = "application/json")

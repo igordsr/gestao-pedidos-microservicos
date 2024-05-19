@@ -15,7 +15,7 @@ FROM openjdk:17
 WORKDIR /app
 
 # Copy the JAR file from the previous stage
-COPY --from=builder /app/target/*.jar /app/catalogo-produtos-service-api.jar
+COPY --from=builder /app/target/*.jar /app/cliente-service-api.jar
 
 # Command to execute the project when the container starts
-CMD ["java", "-jar", "/app/catalogo-produtos-service-api.jar"]
+CMD ["java", "-jar", "/app/cliente-service-api.jar"]
