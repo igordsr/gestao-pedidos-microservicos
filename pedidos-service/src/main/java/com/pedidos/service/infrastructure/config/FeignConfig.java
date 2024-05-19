@@ -2,11 +2,14 @@ package com.pedidos.service.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Logger;
+import feign.Retryer;
 import feign.codec.ErrorDecoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Configuration
 public class FeignConfig {
@@ -34,5 +37,10 @@ public class FeignConfig {
     @Bean
     public JacksonEncoder feignEncoder() {
         return new JacksonEncoder(objectMapper);
+    }
+
+    @Bean
+    public Retryer retryer() {
+        return new Retryer.Default(100, SECONDS.toMillis(1), 5);
     }
 }

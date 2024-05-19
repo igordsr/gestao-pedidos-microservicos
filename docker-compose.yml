@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  cliente-service:
+    build:
+      context: ./cliente-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://cliente-db:3306/clienteDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - cliente-db
+    networks:
+      - gestao-pedidos-microservicos
+
+  catalogo-produtos-service:
+    build:
+      context: ./catalogo-produtos-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://catalogo-produtos-db:3306/catalogoProdutosDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - catalogo-produtos-db
+    networks:
+      - gestao-pedidos-microservicos
+
+  pedidos-service:
+    build:
+      context: ./pedidos-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://pedidos-db:3306/pedidosDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      CLIENTE_SERVICE_URL: http://cliente-service:8081
+      PRODUTO_SERVICE_URL: http://catalogo-produtos-service:8082
+    depends_on:
+      - pedidos-db
+      - cliente-service
+      - catalogo-produtos-service
+    networks:
+      - gestao-pedidos-microservicos
+
+  cliente-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: clienteDB
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - gestao-pedidos-microservicos
+
+  catalogo-produtos-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: catalogoProdutosDB
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - gestao-pedidos-microservicos
+
+  pedidos-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: pedidosDB
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - gestao-pedidos-microservicos
+
+networks:
+  gestao-pedidos-microservicos:
+    driver: bridge
