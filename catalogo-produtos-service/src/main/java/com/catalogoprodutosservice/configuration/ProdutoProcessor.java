@@ -8,9 +8,9 @@ import java.util.UUID;
 public class ProdutoProcessor implements ItemProcessor<Produto, Produto> {
 
     @Override
-    public Produto process(Produto item) throws Exception {
+    public Produto process(final Produto item) throws Exception {
         item.setId(UUID.randomUUID());
-        item.setStatus(false);
+        item.setStatus(Boolean.TRUE);
         return item;
     }
 }

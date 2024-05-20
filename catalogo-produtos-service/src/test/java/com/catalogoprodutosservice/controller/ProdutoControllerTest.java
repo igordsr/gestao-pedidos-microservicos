@@ -23,16 +23,12 @@ class ProdutoControllerTest {
     private ProdutoController produtoController;
     @Mock
     private ProdutoService produtoService;
-    @Mock
-    private JobLauncher jobLauncher;
-    @Mock
-    private Job job;
     private ProdutoDTO produtoDTOMock = mock(ProdutoDTO.class);
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.produtoController = new ProdutoController(produtoService, jobLauncher, job);
+        this.produtoController = new ProdutoController(produtoService);
     }
 
     @Test
