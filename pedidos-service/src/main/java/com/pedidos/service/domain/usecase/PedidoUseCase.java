@@ -16,12 +16,12 @@ import java.util.UUID;
 
 import static java.lang.String.format;
 
-public final class PedidoUseCaseContract implements IPedidoContract {
+public final class PedidoUseCase implements IPedidoContract {
     private final IClienteContract manterCliente;
     private final IProdutoContract materProduto;
     private final IManderDadosPedidoContract manterPedido;
 
-    public PedidoUseCaseContract(IClienteContract manterCliente, IProdutoContract materProduto, IManderDadosPedidoContract manterPedido) {
+    public PedidoUseCase(IClienteContract manterCliente, IProdutoContract materProduto, IManderDadosPedidoContract manterPedido) {
         this.manterCliente = manterCliente;
         this.materProduto = materProduto;
         this.manterPedido = manterPedido;

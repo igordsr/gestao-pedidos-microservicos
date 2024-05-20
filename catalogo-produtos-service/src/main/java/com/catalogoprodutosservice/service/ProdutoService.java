@@ -3,10 +3,14 @@ package com.catalogoprodutosservice.service;
 import com.catalogoprodutosservice.controller.exception.modal.EntidadeNaoProcessavelException;
 import com.catalogoprodutosservice.controller.exception.modal.RegistroJaExisteException;
 import com.catalogoprodutosservice.controller.exception.modal.RegistroNaoEncontradoException;
+import com.catalogoprodutosservice.controller.exception.modal.SolicitacaoInvalidaException;
 import com.catalogoprodutosservice.dto.ProdutoDTO;
 import com.catalogoprodutosservice.model.Produto;
 import com.catalogoprodutosservice.repository.ProdutoRepository;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
@@ -20,21 +24,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProdutoService {
     private final ProdutoRepository produtoRepository;
-    private final FileUploadController fileUploadController;
+    private final FileUploadService fileUploadService;
     private final JobLauncher jobLauncher;
     private final Job job;
     private final Resource inputFile;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @Autowired
-    public ProdutoService(ProdutoRepository produtoRepository, FileUploadController fileUploadController, JobLauncher jobLauncher, Job job, @Value("${inputFile}") Resource inputFile) {
+    public ProdutoService(ProdutoRepository produtoRepository, FileUploadService fileUploadService, JobLauncher jobLauncher, Job job, @Value("${inputFile}") Resource inputFile) {
         this.produtoRepository = produtoRepository;
-        this.fileUploadController = fileUploadController;
+        this.fileUploadService = fileUploadService;
         this.jobLauncher = jobLauncher;
         this.job = job;
         this.inputFile = inputFile;
@@ -110,47 +117,58 @@ public class ProdutoService {
         return this.produtoRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException(id.toString()));
     }
 
-    public BatchStatus criarProdutosFromFile(MultipartFile file, LocalDateTime executionDate) throws IOException {
+    public void criarProdutosFromFile(MultipartFile file, LocalDateTime executionDate) throws IOException {
+        this.fileUploadService.uploadFile(this.inputFile.getFilename(), file);
+        if (Objects.isNull(executionDate)) {
+            this.importarProdutos();
+        } else {
+            this.agendarImportacao(executionDate);
+        }
+    }
+
+    public void agendarImportacao(LocalDateTime horaAgendada) {
+        long delayInicial = calcularDelayInicial(horaAgendada);
+//        scheduler.close();
+        scheduler.schedule(() -> {
+            try {
+                importarProdutos();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, delayInicial, TimeUnit.SECONDS);
+    }
+
+    private long calcularDelayInicial(LocalDateTime horaAgendada) {
+        if (horaAgendada.isBefore(LocalDateTime.now())) {
+            throw new SolicitacaoInvalidaException("A data agendada não pode ser uma data no passado.");
+        }
+        long delay = TimeUnit.SECONDS.toSeconds(horaAgendada.toEpochSecond(java.time.ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC));
+        if (delay < 0) {
+            delay += TimeUnit.DAYS.toSeconds(1);
+        }
+        return delay;
+    }
+
+    public void importarProdutos() throws IOException {
         try {
-            this.fileUploadController.uploadFile(this.inputFile.getFilename(), file);
-            Date time = this.convertToLocalDateTimeToDate(executionDate);
 
             JobParameters jobParameters = new JobParametersBuilder()
                     .addDate("timestamp", Calendar.getInstance().getTime())
                     .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(job, jobParameters);
-            while (jobExecution.isRunning()) {
-                System.out.println("..................");
-            }
-            return jobExecution.getStatus();
-        }
-        catch (IOException e) {
-            this.fileUploadController.deleteFile(this.inputFile.getFilename());
+            jobLauncher.run(job, jobParameters);
+        } catch (JobInstanceAlreadyCompleteException e) {
+            this.fileUploadService.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        } catch (JobExecutionAlreadyRunningException e) {
+            this.fileUploadService.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        } catch (JobParametersInvalidException e) {
+            this.fileUploadService.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        } catch (JobRestartException e) {
+            this.fileUploadService.deleteFile(this.inputFile.getFilename());
             throw new RuntimeException(e);
         }
-        catch (JobInstanceAlreadyCompleteException e) {
-            this.fileUploadController.deleteFile(this.inputFile.getFilename());
-            throw new RuntimeException(e);
-        }
-        catch (JobExecutionAlreadyRunningException e) {
-            this.fileUploadController.deleteFile(this.inputFile.getFilename());
-            throw new RuntimeException(e);
-        }
-        catch (JobParametersInvalidException e) {
-            this.fileUploadController.deleteFile(this.inputFile.getFilename());
-            throw new RuntimeException(e);
-        }
-        catch (JobRestartException e) {
-            this.fileUploadController.deleteFile(this.inputFile.getFilename());
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Date convertToLocalDateTimeToDate(LocalDateTime executionDate){
-        if(Objects.isNull(executionDate)){
-            executionDate = LocalDateTime.now();
-        }
-        return Date.from(executionDate.atZone(ZoneId.systemDefault()).toInstant());
     }
 
 }
