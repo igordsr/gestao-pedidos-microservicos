@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "identificador": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "cliente": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identificador único do cliente"
+    },
+    "itemList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Item"
+      },
+      "description": "Lista de itens do pedido"
+    },
+    "status": {
+      "type": "string",
+      "description": "Status do pedido"
+    }
+  },
+  "required": [
+    "cliente",
+    "itemList"
+  ],
+  "definitions": {
+    "Item": {
+      "type": "object",
+      "properties": {
+        // ... definições das propriedades para ItemDTO aqui ...
+      },
+      "required": [
+        // ... lista das propriedades obrigatórias para ItemDTO aqui ...
+      ]
+    }
+  }
+}
