@@ -12,26 +12,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileUploadController {
+public class FileUploadService {
 
     @Value("${azure.storage.connection-string}")
     private String connectionString;
 
     @Value("${azure.storage.container-name}")
     private String containerName;
-    private static final Logger logger = Logger.getLogger(FileUploadController.class.getName());
+    private static final Logger logger = Logger.getLogger(FileUploadService.class.getName());
 
     public String uploadFile(final String fileName, MultipartFile file) throws IOException {
         if (!Objects.equals(file.getContentType(), "text/csv")) {

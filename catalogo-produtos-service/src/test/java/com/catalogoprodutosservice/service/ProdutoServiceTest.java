@@ -35,7 +35,7 @@ class ProdutoServiceTest {
     @Mock
     private ProdutoRepository produtoRepository;
     @Mock
-    private FileUploadController fileUploadController;
+    private FileUploadService fileUploadService;
     @Mock
     private JobLauncher jobLauncher;
     @Mock
@@ -50,7 +50,7 @@ class ProdutoServiceTest {
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
-        this.produtoService = new ProdutoService(this.produtoRepository, fileUploadController, jobLauncher, job, inputFile);
+        this.produtoService = new ProdutoService(this.produtoRepository, fileUploadService, jobLauncher, job, inputFile);
     }
 
     @AfterEach

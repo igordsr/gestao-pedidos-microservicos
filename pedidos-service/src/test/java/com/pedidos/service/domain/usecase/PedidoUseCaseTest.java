@@ -25,22 +25,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
-import static org.springframework.data.util.Predicates.isTrue;
 
-class PedidoUseCaseContractTest {
+class PedidoUseCaseTest {
     @Mock
     private IClienteContract manterCliente;
     @Mock
     private IProdutoContract materProduto;
     @Mock
     private IManderDadosPedidoContract manterPedido;
-    private PedidoUseCaseContract pedidoUseCase;
+    private PedidoUseCase pedidoUseCase;
     private AutoCloseable openMocks;
 
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
-        this.pedidoUseCase = new PedidoUseCaseContract(this.manterCliente, this.materProduto, this.manterPedido);
+        this.pedidoUseCase = new PedidoUseCase(this.manterCliente, this.materProduto, this.manterPedido);
     }
 
     @AfterEach

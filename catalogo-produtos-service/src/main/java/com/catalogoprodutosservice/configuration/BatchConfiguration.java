@@ -2,7 +2,7 @@ package com.catalogoprodutosservice.configuration;
 
 import com.catalogoprodutosservice.model.Produto;
 import com.catalogoprodutosservice.repository.ProdutoRepository;
-import com.catalogoprodutosservice.service.FileUploadController;
+import com.catalogoprodutosservice.service.FileUploadService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -54,11 +54,11 @@ public class BatchConfiguration {
 
     @Bean
     @StepScope
-    public ItemReader<Produto> itemReader(@Value("${inputFile}") Resource filePath, FileUploadController fileUploadController) throws IOException {
+    public ItemReader<Produto> itemReader(@Value("${inputFile}") Resource filePath, FileUploadService fileUploadService) throws IOException {
         ByteArrayOutputStream outputStream;
         try {
             // Baixar o arquivo do Azure Blob Storage
-            outputStream = fileUploadController.downloadFile(filePath.getFilename());
+            outputStream = fileUploadService.downloadFile(filePath.getFilename());
             if (outputStream == null) {
                 throw new IOException("File not found in Azure Blob Storage");
             }
