@@ -47,6 +47,7 @@
     <orderEntry type="library" name="Maven: io.github.openfeign:feign-core:13.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.15.4" level="project" />
     <orderEntry type="library" name="Maven: io.github.openfeign:feign-jackson:12.2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-openfeign-core:4.1.1" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="0dc96291-556d-477a-b901-2ca8b203b710" />
