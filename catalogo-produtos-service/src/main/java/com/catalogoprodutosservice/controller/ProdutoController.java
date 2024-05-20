@@ -12,16 +12,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -31,16 +34,10 @@ import java.util.UUID;
 @Tag(name = "Produto")
 public class ProdutoController {
     private final ProdutoService produtoService;
-    private final JobLauncher jobLauncher;
-    private final Job job;
-
     @Autowired
-    public ProdutoController(ProdutoService produtoService, JobLauncher jobLauncher, Job job) {
+    public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
-        this.jobLauncher = jobLauncher;
-        this.job = job;
     }
-
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Cadastro de Produto", description = "Esté metodo tem como finalidade permitir o cadastro de produtos no sistema, associando os dados do produto.", method = "POST")
@@ -143,16 +140,11 @@ public class ProdutoController {
         return new ResponseEntity<>(produtoDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/batch")
-    public BatchStatus batch() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addDate("timestamp", Calendar.getInstance().getTime())
-                .toJobParameters();
-        JobExecution jobExecution = jobLauncher.run(job, jobParameters);
-        while (jobExecution.isRunning()) {
-            System.out.println("..................");
-        }
-        return jobExecution.getStatus();
-    }
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+                                        @RequestParam(value = "executionDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime executionDate) throws IOException, JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        this.produtoService.criarProdutosFromFile(file, executionDate);
 
+        return ResponseEntity.ok().build();
+    }
 }

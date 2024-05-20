@@ -13,6 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +34,15 @@ import static org.mockito.Mockito.*;
 class ProdutoServiceTest {
     @Mock
     private ProdutoRepository produtoRepository;
+    @Mock
+    private FileUploadController fileUploadController;
+    @Mock
+    private JobLauncher jobLauncher;
+    @Mock
+    private Job job;
+
+    @Value("${inputFile}")
+    private Resource inputFile;
     @InjectMocks
     private ProdutoService produtoService;
     private AutoCloseable openMocks;
@@ -37,7 +50,7 @@ class ProdutoServiceTest {
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
-        this.produtoService = new ProdutoService(this.produtoRepository);
+        this.produtoService = new ProdutoService(this.produtoRepository, fileUploadController, jobLauncher, job, inputFile);
     }
 
     @AfterEach

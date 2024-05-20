@@ -6,23 +6,38 @@ import com.catalogoprodutosservice.controller.exception.modal.RegistroNaoEncontr
 import com.catalogoprodutosservice.dto.ProdutoDTO;
 import com.catalogoprodutosservice.model.Produto;
 import com.catalogoprodutosservice.repository.ProdutoRepository;
+import org.springframework.batch.core.*;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
-@Transactional
 public class ProdutoService {
     private final ProdutoRepository produtoRepository;
+    private final FileUploadController fileUploadController;
+    private final JobLauncher jobLauncher;
+    private final Job job;
+    private final Resource inputFile;
 
     @Autowired
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    public ProdutoService(ProdutoRepository produtoRepository, FileUploadController fileUploadController, JobLauncher jobLauncher, Job job, @Value("${inputFile}") Resource inputFile) {
         this.produtoRepository = produtoRepository;
+        this.fileUploadController = fileUploadController;
+        this.jobLauncher = jobLauncher;
+        this.job = job;
+        this.inputFile = inputFile;
     }
 
     public ProdutoDTO cadastrar(final ProdutoDTO produtoDTO) {
@@ -94,4 +109,48 @@ public class ProdutoService {
     private Produto findById(UUID id) {
         return this.produtoRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException(id.toString()));
     }
+
+    public BatchStatus criarProdutosFromFile(MultipartFile file, LocalDateTime executionDate) throws IOException {
+        try {
+            this.fileUploadController.uploadFile(this.inputFile.getFilename(), file);
+            Date time = this.convertToLocalDateTimeToDate(executionDate);
+
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addDate("timestamp", Calendar.getInstance().getTime())
+                    .toJobParameters();
+            JobExecution jobExecution = jobLauncher.run(job, jobParameters);
+            while (jobExecution.isRunning()) {
+                System.out.println("..................");
+            }
+            return jobExecution.getStatus();
+        }
+        catch (IOException e) {
+            this.fileUploadController.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        }
+        catch (JobInstanceAlreadyCompleteException e) {
+            this.fileUploadController.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        }
+        catch (JobExecutionAlreadyRunningException e) {
+            this.fileUploadController.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        }
+        catch (JobParametersInvalidException e) {
+            this.fileUploadController.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        }
+        catch (JobRestartException e) {
+            this.fileUploadController.deleteFile(this.inputFile.getFilename());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Date convertToLocalDateTimeToDate(LocalDateTime executionDate){
+        if(Objects.isNull(executionDate)){
+            executionDate = LocalDateTime.now();
+        }
+        return Date.from(executionDate.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
 }
