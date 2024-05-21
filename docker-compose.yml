@@ -26,8 +26,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://catalogo-produtos-db:3306/catalogoProdutosDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      AZURE_STORAGE_CONNECTION_STRING: value
-      AZURE_STORAGE_CONTAINER_NAME: value
+
 
     depends_on:
       - catalogo-produtos-db
