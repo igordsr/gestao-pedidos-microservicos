@@ -26,8 +26,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://catalogo-produtos-db:3306/catalogoProdutosDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      AZURE_STORAGE_CONNECTION_STRING: :value
-      AZURE_STORAGE_CONTAINER_NAME: :value
+      AZURE_STORAGE_CONNECTION_STRING: value
+      AZURE_STORAGE_CONTAINER_NAME: value
 
     depends_on:
       - catalogo-produtos-db
@@ -50,6 +50,25 @@ services:
       - pedidos-db
       - cliente-service
       - catalogo-produtos-service
+    networks:
+      - gestao-pedidos-microservicos
+
+  logistica-service:
+    build:
+      context: ./logistica-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://logistica-db:3306/logisticaDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      CLIENTE_SERVICE_URL: http://cliente-service:8081
+      PEDIDO_SERVICE_URL: http://pedidos-service:8083
+    depends_on:
+      - logistica-db
+      - cliente-service
+      - pedidos-service
     networks:
       - gestao-pedidos-microservicos
 
@@ -82,6 +101,16 @@ services:
       - gestao-pedidos-microservicos
     ports:
       - "3309:3306"
+
+  logistica-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: logisticaDB
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - gestao-pedidos-microservicos
+    ports:
+      - "3310:3306"
 
 networks:
   gestao-pedidos-microservicos:

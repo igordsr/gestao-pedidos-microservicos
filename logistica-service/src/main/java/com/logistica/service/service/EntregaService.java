@@ -1,15 +1,14 @@
-package src.main.java.com.logistica.service.service;
+package com.logistica.service.service;
 
+import com.logistica.service.dto.EntregaDTO;
+import com.logistica.service.infrastructure.feign.ClienteServiceClient;
+import com.logistica.service.infrastructure.feign.Pedido;
+import com.logistica.service.infrastructure.feign.PedidoServiceClient;
+import com.logistica.service.model.Entrega;
+import com.logistica.service.repository.EntregaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import src.main.java.com.logistica.service.dto.EntregaDTO;
-import src.main.java.com.logistica.service.infrastructure.exception.RegistroNaoEncontradoException;
 import src.main.java.com.logistica.service.infrastructure.feign.Cliente;
-import src.main.java.com.logistica.service.infrastructure.feign.ClienteServiceClient;
-import src.main.java.com.logistica.service.infrastructure.feign.Pedido;
-import src.main.java.com.logistica.service.infrastructure.feign.PedidoServiceClient;
-import src.main.java.com.logistica.service.model.Entrega;
-import src.main.java.com.logistica.service.repository.EntregaRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,8 +28,8 @@ public class EntregaService {
         this.pedidoServiceClient = pedidoServiceClient;
     }
 
-    public void atualizarEntrega(UUID idEntrega){
-        final Entrega entrega = entregaRepository.findById(idEntrega).orElseThrow(()-> new RegistroNaoEncontradoException(idEntrega.toString()));
+    public void atualizarEntrega(UUID idEntrega) {
+        final Entrega entrega = this.entregaRepository.findById(idEntrega).orElseThrow();
         entrega.setDataEntrega(LocalDateTime.now());
         entregaRepository.save(entrega);
         pedidoServiceClient.confirmarEntrega(idEntrega);
@@ -51,7 +50,7 @@ public class EntregaService {
                     UUID.randomUUID(),
                     pedido.identificador(),
                     cliente.cep(),
-                    isCepDeSaoPaulo(cliente.cep()) ? LocalDate.now().plusDays(3) : LocalDate.now().plusDays(10) ,
+                    isCepDeSaoPaulo(cliente.cep()) ? LocalDate.now().plusDays(3) : LocalDate.now().plusDays(10),
                     null, // Data de entrega
                     "EM_TRANSITO" // Status entrega
             );
@@ -71,11 +70,8 @@ public class EntregaService {
         if (cep == null || cep.length() != 9 || !cep.matches("\\d{5}-\\d{3}")) {
             throw new IllegalArgumentException("CEP deve estar no formato 00000-000");
         }
-
         String cepPrefixo = cep.substring(0, 5);
         int prefix = Integer.parseInt(cepPrefixo);
-
-
         return (prefix >= 1000 && prefix <= 1999) || (prefix >= 60000 && prefix <= 199999);
     }
 

@@ -34,6 +34,8 @@ docker run `
   -e SPRING_DATASOURCE_URL=<valor> `
   -e SPRING_DATASOURCE_USERNAME=<valor> `
   -e SPRING_DATASOURCE_PASSWORD=<valor> `
+  -e AZURE_STORAGE_CONNECTION_STRING=<valor> `
+  -e AZURE_STORAGE_CONTAINER_NAME=<valor> `
   -p 8082:8082 `
   catalogo-produtos-service-api.jar:latest
 ```

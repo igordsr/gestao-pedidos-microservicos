@@ -1,11 +1,12 @@
-package src.main.java.com.logistica.service.controller;
+package com.logistica.service.controller;
 
+import com.logistica.service.infrastructure.exception.ComunicacaoApiException;
+import com.logistica.service.infrastructure.exception.CustomException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import src.main.java.com.logistica.service.infrastructure.exception.ComunicacaoApiException;
-import src.main.java.com.logistica.service.infrastructure.exception.CustomException;
+
 
 
 @ControllerAdvice

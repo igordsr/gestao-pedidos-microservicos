@@ -1,4 +1,4 @@
-# Micro serviço de Gerenciamento de Produtos
+# Micro serviço de Logistica
 
 - Para executar a Aplicação:
 ```shell
@@ -26,7 +26,7 @@ A documentação das APIs pode ser acessada em [http://localhost:8082/swagger-ui
 
 Gerando uma imagem  da Aplicação com Docker
 ```shell
-docker build -t catalogo-produtos-service-api.jar:latest  .
+docker build -t logistica-service-api:latest  .
 ```
 Executando a Aplicação com Docker
 ```shell
@@ -35,5 +35,5 @@ docker run `
   -e SPRING_DATASOURCE_USERNAME=<valor> `
   -e SPRING_DATASOURCE_PASSWORD=<valor> `
   -p 8082:8082 `
-  catalogo-produtos-service-api.jar:latest
+  logistica-service-api.jar:latest
 ```

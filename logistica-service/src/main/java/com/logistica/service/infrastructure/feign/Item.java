@@ -1,4 +1,4 @@
-package src.main.java.com.logistica.service.infrastructure.feign;
+package com.logistica.service.infrastructure.feign;
 
 import java.util.UUID;
 
