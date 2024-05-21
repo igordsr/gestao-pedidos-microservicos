@@ -1,5 +1,7 @@
-package src.main.java.com.logistica.service.controller;
+package com.logistica.service.controller;
 
+import com.logistica.service.dto.EntregaDTO;
+import com.logistica.service.service.EntregaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -7,10 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import src.main.java.com.logistica.service.dto.EntregaDTO;
-import src.main.java.com.logistica.service.infrastructure.exception.ComunicacaoApiException;
-import src.main.java.com.logistica.service.infrastructure.exception.RegistroNaoEncontradoException;
-import src.main.java.com.logistica.service.service.EntregaService;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,7 @@ public class EntregaController {
     @GetMapping
     @Operation(summary = "Consultar Relatório de Entrega", description = "Consultar os dados de entregas", method = "GET")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Relatório de Entrega realizado com sucesso"),})
-    public ResponseEntity<Map<String, List<EntregaDTO>>> getRelatorioDeEntregas() throws ComunicacaoApiException {
+    public ResponseEntity<Map<String, List<EntregaDTO>>> getRelatorioDeEntregas() {
         return new ResponseEntity<>(entregaService.processarPedidosPagosEAgruparPorCep(), HttpStatus.OK);
     }
 
@@ -39,7 +37,7 @@ public class EntregaController {
             @ApiResponse(responseCode = "200", description = "Entrega realizada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Entrega não encontrada")
     })
-    public ResponseEntity<Void> confirmaEntrega(@PathVariable UUID idEntrega) throws RegistroNaoEncontradoException {
+    public ResponseEntity<Void> confirmaEntrega(@PathVariable UUID idEntrega) {
         entregaService.atualizarEntrega(idEntrega);
         return new ResponseEntity<>(HttpStatus.OK);
     }

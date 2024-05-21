@@ -1,4 +1,4 @@
-package src.main.java.com.logistica.service.infrastructure.config;
+package com.logistica.service.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Logger;

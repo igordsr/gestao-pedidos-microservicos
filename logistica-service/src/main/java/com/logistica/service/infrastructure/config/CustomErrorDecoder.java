@@ -1,11 +1,11 @@
-package src.main.java.com.logistica.service.infrastructure.config;
+package com.logistica.service.infrastructure.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.logistica.service.infrastructure.exception.ComunicacaoApiException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import org.springframework.http.HttpStatus;
-import src.main.java.com.logistica.service.infrastructure.exception.ComunicacaoApiException;
 
 import java.io.IOException;
 import java.io.InputStream;

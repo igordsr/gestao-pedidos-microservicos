@@ -1,10 +1,10 @@
-package src.main.java.com.logistica.service.dto;
+package com.logistica.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.logistica.service.model.Entrega;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import src.main.java.com.logistica.service.model.Entrega;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -31,26 +31,26 @@ public record EntregaDTO(
         @Schema(example = "EM_TRANSITO")
         String statusEntrega
 ) {
-        public Entrega toEntrega(){
-                Entrega entrega = new Entrega();
-                entrega.setId(this.id);
-                entrega.setPedidoId(this.pedidoId);
-                entrega.setCep(this.cep);
-                entrega.setDataPrevisaoEntrega(this.dataPrevisaoEntrega);
-                entrega.setDataEntrega(this.dataEntrega);
-                entrega.setStatusEntrega(Entrega.StatusEntrega.valueOf(this.statusEntrega));
-                return entrega;
-        }
+    public Entrega toEntrega() {
+        Entrega entrega = new Entrega();
+        entrega.setId(this.id);
+        entrega.setPedidoId(this.pedidoId);
+        entrega.setCep(this.cep);
+        entrega.setDataPrevisaoEntrega(this.dataPrevisaoEntrega);
+        entrega.setDataEntrega(this.dataEntrega);
+        entrega.setStatusEntrega(Entrega.StatusEntrega.valueOf(this.statusEntrega));
+        return entrega;
+    }
 
-        public static EntregaDTO getInstance(final Entrega entrega) {
-                Assert.notNull(entrega, "entrega cannot be null");
-                return new EntregaDTO(
-                        entrega.getId(),
-                        entrega.getPedidoId(),
-                        entrega.getCep(),
-                        entrega.getDataPrevisaoEntrega(),
-                        entrega.getDataEntrega(),
-                        entrega.getStatusEntrega().name()
-                );
-        }
+    public static EntregaDTO getInstance(final Entrega entrega) {
+        Assert.notNull(entrega, "entrega cannot be null");
+        return new EntregaDTO(
+                entrega.getId(),
+                entrega.getPedidoId(),
+                entrega.getCep(),
+                entrega.getDataPrevisaoEntrega(),
+                entrega.getDataEntrega(),
+                entrega.getStatusEntrega().name()
+        );
+    }
 }

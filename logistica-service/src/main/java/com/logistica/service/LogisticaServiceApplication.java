@@ -1,4 +1,4 @@
-package src.main.java;
+package com.logistica.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,10 +7,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-public class CatalogoProdutosServiceApplication {
+public class LogisticaServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CatalogoProdutosServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(LogisticaServiceApplication.class, args);
+    }
 
 }

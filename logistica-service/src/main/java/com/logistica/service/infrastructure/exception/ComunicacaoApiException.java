@@ -1,4 +1,4 @@
-package src.main.java.com.logistica.service.infrastructure.exception;
+package com.logistica.service.infrastructure.exception;
 
 import lombok.NoArgsConstructor;
 
