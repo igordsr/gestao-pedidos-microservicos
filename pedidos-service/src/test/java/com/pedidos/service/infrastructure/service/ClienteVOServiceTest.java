@@ -1,6 +1,6 @@
 package com.pedidos.service.infrastructure.service;
 
-import com.pedidos.service.infrastructure.feign.Cliente;
+import com.pedidos.service.infrastructure.feign.vo.ClienteVO;
 import com.pedidos.service.infrastructure.feign.ClienteServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,17 +24,17 @@ class ClienteServiceTest {
     private ClienteServiceClient clienteServiceClient;
 
     private UUID clienteId;
-    private Cliente cliente;
+    private ClienteVO clienteVO;
 
     @BeforeEach
     void setUp() {
         clienteId = UUID.randomUUID();
-        cliente = mock(Cliente.class);
+        clienteVO = mock(ClienteVO.class);
     }
 
     @Test
     void verificarExistencia_ClienteExiste_NoExceptionThrown() {
-        when(clienteServiceClient.getClienteById(clienteId)).thenReturn(cliente);
+        when(clienteServiceClient.getClienteById(clienteId)).thenReturn(clienteVO);
 
         clienteService.verificarExistencia(clienteId);
 

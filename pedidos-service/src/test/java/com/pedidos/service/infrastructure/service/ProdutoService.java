@@ -1,7 +1,7 @@
 package com.pedidos.service.infrastructure.service;
 
 import com.pedidos.service.domain.model.Item;
-import com.pedidos.service.infrastructure.feign.Produto;
+import com.pedidos.service.infrastructure.feign.vo.ProdutoVO;
 import com.pedidos.service.infrastructure.feign.ProdutoServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProdutoServiceTest {
+class ProdutoVOServiceTest {
 
     @Mock
     private ProdutoServiceClient produtoServiceClient;
@@ -26,7 +26,7 @@ class ProdutoServiceTest {
     private ProdutoService produtoService;
 
     private UUID produtoId;
-    private Produto produto;
+    private ProdutoVO produtoVO;
     private Item item;
     private int quantidade;
 
@@ -34,14 +34,14 @@ class ProdutoServiceTest {
     void setUp() {
         produtoId = UUID.randomUUID();
         quantidade = 5;
-        produto = new Produto(produtoId, "Teste Nome", "Teste Desc", 10.7, 10);
+        produtoVO = new ProdutoVO(produtoId, "Teste Nome", "Teste Desc", 10.7, 10);
         item = new Item(produtoId, 10);
     }
 
     @Test
     void consultarProdutosTest() {
         List<UUID> ids = List.of(produtoId);
-        when(produtoServiceClient.getProdutoById(ids)).thenReturn(List.of(produto));
+        when(produtoServiceClient.getProdutoById(ids)).thenReturn(List.of(produtoVO));
 
         List<Item> result = produtoService.consultarProdutos(ids);
 

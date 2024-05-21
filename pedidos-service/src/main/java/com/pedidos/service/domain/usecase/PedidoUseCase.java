@@ -43,7 +43,7 @@ public final class PedidoUseCase implements IPedidoContract {
     @Override
     public Pedido liquidarPedido(UUID identificador) {
         final Pedido pedido = this.manterPedido.consultarPeloIdentificador(identificador);
-        if(!pedido.getStatusPedido().equals(StatusPedido.AGUARDANDO_PAGAMENTO)){
+        if (!pedido.getStatusPedido().equals(StatusPedido.AGUARDANDO_PAGAMENTO)) {
             final String errorMsg = "Pedido já foi pago anteriormente e está no status de %s";
             throw new EntidadeNaoProcessavelException(format(errorMsg, pedido.getStatusPedido().getDescricao()));
         }
@@ -56,7 +56,7 @@ public final class PedidoUseCase implements IPedidoContract {
 
     @Override
     public List<Pedido> gerarRelatorioPedidosPagos() {
-        final List<Pedido> pedidos = this.manterPedido.consultarPeloStatus(StatusPedido.PAGO);
+        final List<Pedido> pedidos = this.manterPedido.consultarPeloStatus(List.of(StatusPedido.PAGO, StatusPedido.PREPARANDO_PARA_ENVIO));
         pedidos.forEach(pedido -> pedido.setStatusPedido(StatusPedido.PREPARANDO_PARA_ENVIO));
         return this.manterPedido.atualizar(pedidos);
     }
@@ -64,7 +64,7 @@ public final class PedidoUseCase implements IPedidoContract {
     @Override
     public Pedido enviar(UUID identificador) throws RegistroNaoEncontradoException {
         final Pedido pedido = this.manterPedido.consultarPeloIdentificador(identificador);
-        if(pedido.getStatusPedido().equals(StatusPedido.AGUARDANDO_PAGAMENTO)){
+        if (pedido.getStatusPedido().equals(StatusPedido.AGUARDANDO_PAGAMENTO)) {
             final String errorMsg = "Este pedido não pode ser liberado para transporte pois está pendente de pagamento.";
             throw new EntidadeNaoProcessavelException(errorMsg);
         }
@@ -75,7 +75,7 @@ public final class PedidoUseCase implements IPedidoContract {
     @Override
     public Pedido entregar(UUID identificador) throws CustomException {
         final Pedido pedido = this.manterPedido.consultarPeloIdentificador(identificador);
-        if(pedido.getStatusPedido().equals(StatusPedido.AGUARDANDO_PAGAMENTO)){
+        if (pedido.getStatusPedido().equals(StatusPedido.AGUARDANDO_PAGAMENTO)) {
             final String errorMsg = "Este pedido não pode ser liberado para entrega pois está pendente de pagamento.";
             throw new EntidadeNaoProcessavelException(errorMsg);
         }

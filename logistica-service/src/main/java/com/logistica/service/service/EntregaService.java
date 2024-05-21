@@ -2,19 +2,21 @@ package com.logistica.service.service;
 
 import com.logistica.service.dto.EntregaDTO;
 import com.logistica.service.infrastructure.feign.ClienteServiceClient;
-import com.logistica.service.infrastructure.feign.Pedido;
 import com.logistica.service.infrastructure.feign.PedidoServiceClient;
+import com.logistica.service.infrastructure.feign.vo.Cliente;
+import com.logistica.service.infrastructure.feign.vo.Pedido;
 import com.logistica.service.model.Entrega;
 import com.logistica.service.repository.EntregaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import src.main.java.com.logistica.service.infrastructure.feign.Cliente;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Transactional
 public class EntregaService {
     private final EntregaRepository entregaRepository;
     private final ClienteServiceClient clienteServiceClient;
@@ -28,13 +30,15 @@ public class EntregaService {
         this.pedidoServiceClient = pedidoServiceClient;
     }
 
+    @Transactional
     public void atualizarEntrega(UUID idEntrega) {
         final Entrega entrega = this.entregaRepository.findById(idEntrega).orElseThrow();
         entrega.setDataEntrega(LocalDateTime.now());
         entregaRepository.save(entrega);
-        pedidoServiceClient.confirmarEntrega(idEntrega);
+        pedidoServiceClient.confirmarEntrega(entrega.getPedidoId());
     }
 
+    @Transactional
     public Map<String, List<EntregaDTO>> processarPedidosPagosEAgruparPorCep() {
         List<Pedido> listaPedidosPagos = pedidoServiceClient.getRelatorioPedidosPagos();
         Map<String, List<EntregaDTO>> entregasAgrupadasPorCep = new HashMap<>();

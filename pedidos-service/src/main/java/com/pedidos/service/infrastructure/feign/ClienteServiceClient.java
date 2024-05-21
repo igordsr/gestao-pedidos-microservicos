@@ -1,6 +1,7 @@
 package com.pedidos.service.infrastructure.feign;
 
 import com.pedidos.service.infrastructure.config.FeignConfig;
+import com.pedidos.service.infrastructure.feign.vo.ClienteVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,6 @@ import java.util.UUID;
 public interface ClienteServiceClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/cliente/{id}", produces = "application/json")
-    Cliente getClienteById(@PathVariable("id") UUID id);
+    ClienteVO getClienteById(@PathVariable("id") UUID id);
 
 }

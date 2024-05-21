@@ -1,6 +1,7 @@
 package com.logistica.service.infrastructure.feign;
 
 import com.logistica.service.infrastructure.config.FeignConfig;
+import com.logistica.service.infrastructure.feign.vo.Pedido;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

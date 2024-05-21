@@ -2,6 +2,7 @@ package com.pedidos.service.application.controller;
 
 import com.pedidos.service.application.gateway.PedidoGateway;
 import com.pedidos.service.domain.dto.PedidoDTO;
+import com.pedidos.service.domain.dto.RelatorioDTO;
 import com.pedidos.service.domain.exception.CustomException;
 import com.pedidos.service.domain.exception.RegistroNaoEncontradoException;
 import com.pedidos.service.infrastructure.service.ClienteService;
@@ -58,8 +59,8 @@ public class PedidoController {
     @GetMapping("relatorio-pedidos-pagos")
     @Operation(summary = "Gerar Relatório", description = "Esté metodo tem como finalidade emitir o relatório dos pedidos já pagos no sistema, e atualiza o status para 'PREPARANDO PARA ENVIO'", method = "GET")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Relatório do pedido realizado com sucesso"),})
-    public ResponseEntity<List<PedidoDTO>> gerarRelatorioPedidosPagos() throws CustomException {
-        List<PedidoDTO> pedidoDTOS = this.pedidoGateway.gerarRelatorioPedidosPagos();
+    public ResponseEntity<List<RelatorioDTO>> gerarRelatorioPedidosPagos() throws CustomException {
+        List<RelatorioDTO> pedidoDTOS = this.pedidoGateway.gerarRelatorioPedidosPagos();
         return new ResponseEntity<>(pedidoDTOS, HttpStatus.OK);
     }
 

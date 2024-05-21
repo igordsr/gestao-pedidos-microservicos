@@ -106,7 +106,7 @@ class PedidoUseCaseTest {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
         final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.PAGO);
         List<Pedido> pedidos = List.of(pedido);
-        when(this.manterPedido.consultarPeloStatus(StatusPedido.PAGO)).thenReturn(pedidos);
+        when(this.manterPedido.consultarPeloStatus(anyList())).thenReturn(pedidos);
         when(this.manterPedido.atualizar(pedidos)).thenReturn(pedidos);
 
         List<Pedido> result = this.pedidoUseCase.gerarRelatorioPedidosPagos();

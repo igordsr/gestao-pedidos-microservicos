@@ -12,4 +12,6 @@ public interface IConsultarPedido {
 
     List<Pedido> consultarPeloStatus(StatusPedido statusPedido) throws RegistroNaoEncontradoException;
 
+    List<Pedido> consultarPeloStatus(List<StatusPedido> statusPedido) throws RegistroNaoEncontradoException;
+
 }

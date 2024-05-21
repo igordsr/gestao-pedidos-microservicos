@@ -4,6 +4,7 @@ import com.pedidos.service.domain.contract.IClienteContract;
 import com.pedidos.service.domain.contract.IManderDadosPedidoContract;
 import com.pedidos.service.domain.contract.IProdutoContract;
 import com.pedidos.service.domain.dto.PedidoDTO;
+import com.pedidos.service.domain.dto.RelatorioDTO;
 import com.pedidos.service.domain.model.Pedido;
 import com.pedidos.service.domain.usecase.PedidoUseCase;
 
@@ -27,8 +28,9 @@ public class PedidoGateway {
         return pedidoDTO;
     }
 
-    public List<PedidoDTO> gerarRelatorioPedidosPagos() {
-        return this.pedidoUseCase.gerarRelatorioPedidosPagos().stream().map(Pedido::toDTO).toList();
+    public List<RelatorioDTO> gerarRelatorioPedidosPagos() {
+        List<PedidoDTO> list = this.pedidoUseCase.gerarRelatorioPedidosPagos().stream().map(Pedido::toDTO).toList();
+        return list.stream().map(item -> new RelatorioDTO(item.identificador(), item.cliente(), item.itemList())).toList();
     }
 
     public PedidoDTO liquidarPedido(UUID identificador) {

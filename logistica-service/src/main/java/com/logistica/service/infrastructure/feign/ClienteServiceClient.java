@@ -1,6 +1,7 @@
 package com.logistica.service.infrastructure.feign;
 
 import com.logistica.service.infrastructure.config.FeignConfig;
+import com.logistica.service.infrastructure.feign.vo.Cliente;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,5 +13,5 @@ import java.util.UUID;
 public interface ClienteServiceClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/cliente/{id}", produces = "application/json")
-    src.main.java.com.logistica.service.infrastructure.feign.Cliente getClienteById(@PathVariable("id") UUID id);
+    Cliente getClienteById(@PathVariable("id") UUID id);
 }

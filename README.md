@@ -7,11 +7,11 @@
 3. [Arquitetura](#arquitetura)
 4. [Funcionalidades Principais](#funcionalidades-principais)
 5. [Design dos Serviços](#design-dos-serviços)
-6. [Endpoints de API](#endpoints-de-api)
+6. [Principais Endpoints](#principais-endpoints)
 7. [Guias de Implantação](#guias-de-implantação)
-8. [Guias de Uso](#guias-de-uso)
-9. [Contribuição](#contribuição)
-10. [Licença](#licença)
+8. [Documentação da API com Swagger](#documentação-da-api-com-swagger)
+9. [Fluxo de Uso](#fluxo-de-uso)
+
 
 ## Introdução
 
@@ -30,7 +30,7 @@ A arquitetura do projeto é baseada em microsserviços, garantindo a autonomia e
 ### Componentes Principais:
 
 - **Backend**: Baseado em microsserviços com Spring Boot.
-- **Banco de Dados**: Utilizamos MySql para persistência de dados.
+- **Banco de Dados**: Utilizamos MYSQL para persistência de dados.
 
 ## Funcionalidades Principais
 
@@ -39,12 +39,13 @@ A arquitetura do projeto é baseada em microsserviços, garantindo a autonomia e
     - Dados básicos e endereço de entrega do cliente.
 
 2. **Registro de Produtos**
-    - Operações CRUD para gerenciar produtos.
+    - Gerenciamento do catálogo de produtos.
     - Controle de estoque.
 
 3. **Carga de Produtos**
     - Importação em massa de dados de produtos.
     - Upload de arquivo e processamento assíncrono para atualizar o catálogo.
+    - Há um documento na raiz desse projeto que se chama produtos.csv que pode ser usado para dar a carga inical no projeto
 
 4. **Gestão de Pedidos**
     - Processamento de pedidos desde a criação até a conclusão.
@@ -63,11 +64,10 @@ Os serviços foram desenhados seguindo princípios de arquitetura de microsservi
 
 - **ClienteService**: Gerencia operações relacionadas aos clientes.
 - **ProdutoService**: Gerencia o catálogo de produtos e controle de estoque.
-- **CargaProdutoService**: Lida com a importação e processamento de dados de produtos.
 - **PedidoService**: Centraliza o processamento e gerenciamento de pedidos.
 - **EntregaService**: Gerencia a logística e rastreamento de entregas.
 
-## Endpoints de API
+## Principais Endpoints
 
 ### ClienteService
 
@@ -121,64 +121,146 @@ Os serviços foram desenhados seguindo princípios de arquitetura de microsservi
 
 ### Requisitos
 
-- [Lista de requisitos de sistema, ex: Java 11, Docker]
-- [Lista de dependências, ex: Spring Boot, PostgreSQL]
+- Docker e Docker Compose instalados.
 
 ### Passos de Implantação
 
 1. **Clone o repositório**:
     ```sh
-    git clone https://github.com/usuario/projeto.git
+    https://github.com/igordsr/gestao-pedidos-microservicos.git
     ```
-2. **Instale as dependências**:
+2. **Navegue até o diretório do projeto**:
     ```sh
-    cd projeto
-    ./mvnw install
+    cd gestao-pedidos-microservicos
     ```
-3. **Configure as variáveis de ambiente**:
-    - Crie um arquivo `.env` baseado no `.env.example`.
-
-4. **Execute a aplicação**:
+3. **Execute o Docker Compose**:
     ```sh
-    ./mvnw spring-boot:run
+    docker-compose up --build
+
     ```
 
-## Guias de Uso
+## Documentação da API com Swagger
 
-### Acesso à Aplicação
+Para acessar a documentação detalhada dos endpoints das APIs, utilize os seguintes links:
 
-Depois de implantar o projeto, acesse a aplicação em [URL da aplicação].
+- **Cliente**: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
+- **Produto**: [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
+- **Pedidos**: [http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)
+- **Logística**: [http://localhost:8084/swagger-ui/index.html](http://localhost:8084/swagger-ui/index.html)
 
-### Funcionalidades Principais
+### Fluxo de Uso
 
-- **Registro de Cliente**: Adicionar, editar, visualizar e deletar clientes.
-- **Registro de Produtos**: Adicionar, editar, visualizar e deletar produtos.
-- **Carga de Produtos**: Importar dados de produtos via upload de arquivo.
-- **Gestão de Pedidos**: Criar e gerenciar pedidos.
-- **Logística de Entrega**: Gerenciar e rastrear entregas.
+1. **O cliente pode se cadastrar**:
+    - **Requisição**: `POST http://localhost:8081/cliente`
+    - **Body**:
+        ```json
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nome": "Yago Thomas Aparício",
+          "cep": "01001-000",
+          "logradouro": "Praça da Sé",
+          "complemento": "lado ímpar",
+          "bairro": "Sé",
+          "numero": "138",
+          "telefone": "5435008794",
+          "email": "ayla_barros@gmail.com",
+          "dataNascimento": "1991-02-15",
+          "cpf": "59694668247"
+        }
+        ```
+
+2. **O funcionário pode cadastrar produto**:
+    - **Requisição**: `POST http://localhost:8082/produto`
+    - **Body**:
+        ```json
+        {
+          "nome": "Camiseta",
+          "descricao": "Camiseta de algodão com estampa",
+          "preco": 29.99,
+          "qtdEstoque": 3
+        }
+        ```
+
+3. **O cliente pode fazer o pedido**:
+    - **Requisição**: `POST http://localhost:8083/pedido`
+    - **Body**:
+        ```json
+        {
+          "cliente": "389c95b1-c5d6-40ff-abb3-d59fececc973",
+          "itemList": [
+            {
+              "produto": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              "quantidade": 1
+            }
+          ]
+        }
+        ```
+
+4. **O cliente pode pagar o pedido**:
+    - **Requisição**: `PUT http://localhost:8083/pedido/9248db63-3a14-4399-b191-07dc018616f1/efetuar-pagamento`
+    - **Body**: Nenhum
+
+5. **O funcionário gera relatório**:
+    - **Requisição**: `GET http://localhost:8084/entrega`
+    - **Body**: Nenhum
+
+6. **O entregador faz a entrega**:
+    - **Requisição**: `PATCH http://localhost:8084/entrega/6cb79855-3180-4490-81f9-c7fc2c7780e2`
+    - **Body**: Nenhum
 
 ### Exemplos de Uso
 
 - **Adicionar Cliente**:
     ```sh
-    curl -X POST http://api.seuprojeto.com/clientes -d '{"nome": "João", "endereco": "Rua X, 123"}'
+    curl -X POST http://localhost:8081/cliente -d '{
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nome": "Yago Thomas Aparício",
+      "cep": "01001-000",
+      "logradouro": "Praça da Sé",
+      "complemento": "lado ímpar",
+      "bairro": "Sé",
+      "numero": "138",
+      "telefone": "5435008794",
+      "email": "ayla_barros@gmail.com",
+      "dataNascimento": "1991-02-15",
+      "cpf": "59694668247"
+    }'
     ```
 
 - **Adicionar Produto**:
     ```sh
-    curl -X POST http://api.seuprojeto.com/produtos -d '{"nome": "Produto Y", "preco": 100.00}'
+    curl -X POST http://localhost:8082/produto -d '{
+      "nome": "Camiseta",
+      "descricao": "Camiseta de algodão com estampa",
+      "preco": 29.99,
+      "qtdEstoque": 3
+    }'
     ```
 
-## Contribuição
+- **Fazer Pedido**:
+    ```sh
+    curl -X POST http://localhost:8083/pedido -d '{
+      "cliente": "389c95b1-c5d6-40ff-abb3-d59fececc973",
+      "itemList": [
+        {
+          "produto": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "quantidade": 1
+        }
+      ]
+    }'
+    ```
 
-Se você deseja contribuir com este projeto, siga as diretrizes abaixo:
+- **Pagar Pedido**:
+    ```sh
+    curl -X PUT http://localhost:8083/pedido/9248db63-3a14-4399-b191-07dc018616f1/efetuar-pagamento
+    ```
 
-1. **Fork o repositório**
-2. **Crie uma branch para sua feature** (`git checkout -b feature/nova-feature`)
-3. **Commit suas alterações** (`git commit -m 'Adiciona nova feature'`)
-4. **Envie para o branch** (`git push origin feature/nova-feature`)
-5. **Abra um Pull Request**
+- **Gerar Relatório**:
+    ```sh
+    curl -X GET http://localhost:8084/entrega
+    ```
 
-## Licença
-
-Este projeto está licenciado sob a licença [Nome da Licença]. Veja o arquivo [LICENSE](link-para-arquivo-LICENSE) para mais detalhes.
+- **Confirmar Entrega**:
+    ```sh
+    curl -X PATCH http://localhost:8084/entrega/6cb79855-3180-4490-81f9-c7fc2c7780e2
+    ```

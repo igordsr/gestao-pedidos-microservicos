@@ -8,12 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController()
 @RequestMapping(value = "/entrega", produces = {"application/json"})
@@ -30,5 +29,16 @@ public class EntregaController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Relatório de Entrega realizado com sucesso"),})
     public ResponseEntity<Map<String, List<EntregaDTO>>> getRelatorioDeEntregas() {
         return new ResponseEntity<>(entregaService.processarPedidosPagosEAgruparPorCep(), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{idEntrega}")
+    @Operation(summary = "Confirmar Entrega", description = "Confirma a Entrega", method = "PATCH")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Entrega realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Entrega não encontrada")
+    })
+    public ResponseEntity<Void> confirmaEntrega(@PathVariable UUID idEntrega) {
+        entregaService.atualizarEntrega(idEntrega);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

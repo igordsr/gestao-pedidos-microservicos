@@ -3,7 +3,7 @@ package com.pedidos.service.infrastructure.service;
 import com.pedidos.service.domain.contract.IProdutoContract;
 import com.pedidos.service.domain.exception.EntidadeNaoProcessavelException;
 import com.pedidos.service.domain.model.Item;
-import com.pedidos.service.infrastructure.feign.Produto;
+import com.pedidos.service.infrastructure.feign.vo.ProdutoVO;
 import com.pedidos.service.infrastructure.feign.ProdutoServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +23,10 @@ public class ProdutoService implements IProdutoContract {
 
     @Override
     public List<Item> consultarProdutos(List<UUID> itens) {
-        final List<Produto> produtos = this.produtoServiceClient.getProdutoById(itens);
+        final List<ProdutoVO> produtoVOS = this.produtoServiceClient.getProdutoById(itens);
         final List<Item> itensFound = new ArrayList<>();
-        for (Produto produto : produtos) {
-            Item item = new Item(produto.id(), produto.qtdEstoque());
+        for (ProdutoVO produtoVO : produtoVOS) {
+            Item item = new Item(produtoVO.id(), produtoVO.qtdEstoque());
             itensFound.add(item);
         }
         return itensFound;
@@ -34,7 +34,7 @@ public class ProdutoService implements IProdutoContract {
 
     @Override
     public Item diminuirQuantidadeProdutoEstoque(UUID id, Integer quantidade) throws EntidadeNaoProcessavelException {
-        final Produto produto = this.produtoServiceClient.decrementarEstoque(id, quantidade);
-        return new Item(produto.id(), produto.qtdEstoque());
+        final ProdutoVO produtoVO = this.produtoServiceClient.decrementarEstoque(id, quantidade);
+        return new Item(produtoVO.id(), produtoVO.qtdEstoque());
     }
 }
