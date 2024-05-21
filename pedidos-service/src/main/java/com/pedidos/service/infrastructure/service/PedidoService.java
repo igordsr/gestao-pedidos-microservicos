@@ -31,7 +31,7 @@ public class PedidoService implements IManderDadosPedidoContract {
 
     @Override
     public List<Pedido> consultarPeloStatus(StatusPedido statusPedido) throws RegistroNaoEncontradoException {
-        final List<PedidoEntity> pedidos = this.pedidoRepository.findByStatusPedido(statusPedido);
+        final List<PedidoEntity> pedidos = this.pedidoRepository.findByStatusPedidoIn(List.of(StatusPedido.PREPARANDO_PARA_ENVIO, statusPedido));
         return this.mapTpListPedidos(pedidos);
     }
 

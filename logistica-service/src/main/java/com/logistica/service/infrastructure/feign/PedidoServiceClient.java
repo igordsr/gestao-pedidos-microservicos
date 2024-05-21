@@ -16,10 +16,10 @@ public interface PedidoServiceClient {
     List<Pedido> getRelatorioPedidosPagos();
 
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/pedido/{id}/transportar", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PUT, value = "/pedido/{id}/transportar", produces = "application/json")
     Pedido confirmarTransporte(@PathVariable("id") UUID id);
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/pedido/{id}/entregar", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PUT, value = "/pedido/{id}/entregar", produces = "application/json")
     Pedido confirmarEntrega(@PathVariable("id") UUID id);
 
 

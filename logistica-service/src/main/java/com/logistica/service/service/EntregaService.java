@@ -55,12 +55,12 @@ public class EntregaService {
                     "EM_TRANSITO" // Status entrega
             );
 
-            entregaRepository.save(entregaDTO.toEntrega());
-
+            Entrega save = entregaRepository.save(entregaDTO.toEntrega());
+            EntregaDTO instance = EntregaDTO.getInstance(save);
 
             entregasAgrupadasPorCep
                     .computeIfAbsent(cepPrefixo, k -> new ArrayList<>())
-                    .add(entregaDTO);
+                    .add(instance);
         }
 
         return entregasAgrupadasPorCep;

@@ -47,8 +47,8 @@ public class PedidoController {
         return new ResponseEntity<>(pedidoDTO, HttpStatus.CREATED);
     }
 
-    @PatchMapping("{identificador}/efetuar-pagamento")
-    @Operation(summary = "Pagar de Pedido", description = "Esté metodo tem como finalidade permitir o pagamento do pedido no sistema", method = "PATCH")
+    @PutMapping("{identificador}/efetuar-pagamento")
+    @Operation(summary = "Pagar de Pedido", description = "Esté metodo tem como finalidade permitir o pagamento do pedido no sistema", method = "PUT")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Pagamento do pedido realizado com sucesso"),})
     public ResponseEntity<PedidoDTO> liquidarPedido(@PathVariable UUID identificador) throws CustomException {
         PedidoDTO pedidoDTO = this.pedidoGateway.liquidarPedido(identificador);
@@ -63,16 +63,16 @@ public class PedidoController {
         return new ResponseEntity<>(pedidoDTOS, HttpStatus.OK);
     }
 
-    @PatchMapping("{identificador}/transportar")
-    @Operation(summary = "Transportar Pedido", description = "Esté metodo tem como finalidade de atualizar o status do pedido para 'AGUARDANDO ENTREGA', quando for iniciado o transpote do pedido para o cliente", method = "PATCH")
+    @PutMapping("{identificador}/transportar")
+    @Operation(summary = "Transportar Pedido", description = "Esté metodo tem como finalidade de atualizar o status do pedido para 'AGUARDANDO ENTREGA', quando for iniciado o transpote do pedido para o cliente", method = "PUT")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Status do pedido atualizado com sucesso"),})
     public ResponseEntity<PedidoDTO> enviar(@PathVariable UUID identificador) throws CustomException {
         PedidoDTO pedidoDTO = this.pedidoGateway.enviar(identificador);
         return new ResponseEntity<>(pedidoDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("{identificador}/entregar")
-    @Operation(summary = "Entregar Pedido", description = "Esté metodo tem como finalidade de atualizar o status do pedido para 'ENTREGUE', quando o pedido for entregue para o cliente", method = "PATCH")
+    @PutMapping("{identificador}/entregar")
+    @Operation(summary = "Entregar Pedido", description = "Esté metodo tem como finalidade de atualizar o status do pedido para 'ENTREGUE', quando o pedido for entregue para o cliente", method = "PUT")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Status do pedido atualizado com sucesso"),})
     public ResponseEntity<PedidoDTO> entregar(@PathVariable UUID identificador) throws CustomException {
         PedidoDTO pedidoDTO = this.pedidoGateway.entregar(identificador);
