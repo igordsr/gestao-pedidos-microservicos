@@ -1,12 +1,9 @@
 package com.usuarioservice.dto;
 
-import com.usuarioservice.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.usuarioservice.model.Usuario;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.util.Assert;
 
@@ -61,7 +58,11 @@ public record UsuarioDTO(
         @CPF
         @Schema(example = "59694668247")
         @Pattern(regexp = "\\d{11}", message = "CPF deve ser válido")
-        String cpf
+        String cpf,
+
+        @Size(min = 6)
+        @NotNull(message = "A senha do usuário não pode ser null")
+        String password
 ) {
 
     public Usuario toUsuario() {
@@ -76,15 +77,25 @@ public record UsuarioDTO(
         usuario.setEmail(email);
         usuario.setDataNascimento(dataNascimento);
         usuario.setCpf(cpf);
+        usuario.setPassword(password);
         return usuario;
     }
 
     public static UsuarioDTO getInstance(final Usuario usuario) {
         Assert.notNull(usuario, "Objeto não pode ser nulo");
-        return new UsuarioDTO(usuario.getId(), usuario.getNome(), usuario.getCep(),
+        return new UsuarioDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getCep(),
                 usuario.getLogradouro(),
                 usuario.getComplemento(),
                 usuario.getBairro(),
-                usuario.getNumero(), usuario.getTelefone(), usuario.getEmail(), usuario.getDataNascimento(), usuario.getCpf());
+                usuario.getNumero(),
+                usuario.getTelefone(),
+                usuario.getEmail(),
+                usuario.getDataNascimento(),
+                usuario.getCpf(),
+                usuario.getPassword()
+        );
     }
 }
