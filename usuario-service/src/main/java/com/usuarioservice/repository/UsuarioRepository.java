@@ -15,5 +15,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     List<Usuario> findByStatusTrue();
 
-
+    Optional<Usuario> findByEmail(String username);
 }

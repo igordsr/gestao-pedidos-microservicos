@@ -6,6 +6,7 @@ import com.usuarioservice.dto.UsuarioDTO;
 import com.usuarioservice.model.Usuario;
 import com.usuarioservice.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -18,10 +19,12 @@ import java.util.UUID;
 @Transactional
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsuarioService(final UsuarioRepository usuarioRepository) {
+    public UsuarioService(final UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsuarioDTO cadastrar(final UsuarioDTO usuarioDTO) {
@@ -30,7 +33,9 @@ public class UsuarioService {
         if (usuarioOptional.isPresent()) {
             throw new RegistroJaExisteException(usuarioOptional.get().getNome());
         }
-        final Usuario usuario = usuarioRepository.save(usuarioDTO.toUsuario());
+        Usuario usuario = usuarioDTO.toUsuario();
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuario = usuarioRepository.save(usuario);
         return UsuarioDTO.getInstance(usuario);
     }
 
@@ -56,6 +61,7 @@ public class UsuarioService {
         usuario.setEmail(usuarioDTO.email());
         usuario.setDataNascimento(usuarioDTO.dataNascimento());
         usuario.setCpf(usuarioDTO.cpf());
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         this.usuarioRepository.save(usuario);
         return UsuarioDTO.getInstance(usuario);
     }
@@ -70,5 +76,10 @@ public class UsuarioService {
     private Usuario findById(UUID id) {
         Assert.notNull(id, "O objeto id não pode ser null");
         return this.usuarioRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException(id.toString()));
+    }
+
+    @Transactional(readOnly = true)
+    public Usuario buscarPorUsername(String username) {
+        return this.usuarioRepository.findByEmail(username).orElseThrow(() -> new RegistroNaoEncontradoException(username));
     }
 }

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +30,8 @@ import static org.mockito.Mockito.*;
 class UsuarioServiceTest {
     @Mock
     private UsuarioRepository usuarioRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UsuarioService usuarioService;
     private AutoCloseable openMocks;
@@ -36,7 +39,7 @@ class UsuarioServiceTest {
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
-        this.usuarioService = new UsuarioService(this.usuarioRepository);
+        this.usuarioService = new UsuarioService(this.usuarioRepository, this.passwordEncoder);
     }
 
     @AfterEach
@@ -126,7 +129,8 @@ class UsuarioServiceTest {
                 "95999878033",
                 "valentina.mariane.ramos@hotmail.com.br",
                 LocalDate.now(),
-                "58235909626"
+                "58235909626",
+                "123456"
         );
 
         when(this.usuarioRepository.findById(any(UUID.class))).thenReturn(Optional.of(usuario));

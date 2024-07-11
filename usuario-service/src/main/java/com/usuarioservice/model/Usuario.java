@@ -49,4 +49,10 @@ public class Usuario {
     @Column(nullable = false)
     private boolean status = Boolean.TRUE;
 
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    public Role role = Role.ROLE_CLIENTE;
 }

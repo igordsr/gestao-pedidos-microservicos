@@ -100,7 +100,7 @@ class UsuarioControllerIT {
     @Test
     void encontrarUsuarioPorId() {
         final UUID id = UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5");
-        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000", "Praça da Sé", "lado ímpar", "Sé", "138", "1234567890", "joao@example.com", LocalDate.of(1990, 1, 1), "12345678901");
+        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000", "Praça da Sé", "lado ímpar", "Sé", "138", "1234567890", "joao@example.com", LocalDate.of(1990, 1, 1), "12345678901", "123456");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(usuarioDTO)
@@ -138,7 +138,7 @@ class UsuarioControllerIT {
     @Test
     void cadastrarUsuarioAlreadyExistsException() {
         final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000",
-                "Praça da Sé", "lado ímpar", "Sé", "138", "2737183089", "joao@example.com", LocalDate.of(1990, 1, 1), "91019677031");
+                "Praça da Sé", "lado ímpar", "Sé", "138", "2737183089", "joao@example.com", LocalDate.of(1990, 1, 1), "91019677031", "123456");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(usuarioDTO)
