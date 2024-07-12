@@ -3,6 +3,7 @@ package com.usuarioservice.controller;
 import com.usuarioservice.dto.UserDetailsDTO;
 import com.usuarioservice.dto.UsuarioLoginDTO;
 import com.usuarioservice.jwt.JwtToken;
+import com.usuarioservice.jwt.JwtUserDetails;
 import com.usuarioservice.jwt.JwtUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -14,14 +15,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -37,7 +36,7 @@ public class AutenticacaoController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDTO dto, HttpServletRequest request) {
+    public ResponseEntity<JwtToken> autenticar(@RequestBody @Valid UsuarioLoginDTO dto, HttpServletRequest request) {
         log.info("Processo de Autenticação pelo login {}", dto.getEmail());
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
@@ -52,10 +51,10 @@ public class AutenticacaoController {
 
 
     @GetMapping(value = "/auth", produces = "application/json")
-    public ResponseEntity<?> autenticar() {
+    public ResponseEntity<UserDetailsDTO> autenticar() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!Objects.isNull(authentication) && authentication.isAuthenticated()) {
-            final UserDetails principal = (UserDetails) authentication.getPrincipal();
+            final JwtUserDetails principal = (JwtUserDetails) authentication.getPrincipal();
             final UserDetailsDTO userDetailsDTO = new UserDetailsDTO(principal);
             return ResponseEntity.ok(userDetailsDTO);
         }

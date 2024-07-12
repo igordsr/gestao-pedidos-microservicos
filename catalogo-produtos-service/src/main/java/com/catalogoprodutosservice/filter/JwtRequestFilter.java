@@ -1,5 +1,6 @@
 package com.catalogoprodutosservice.filter;
 
+import com.catalogoprodutosservice.configuration.JwtUserDetails;
 import com.catalogoprodutosservice.controller.exception.modal.ComunicacaoApiException;
 import com.catalogoprodutosservice.feign.UsuarioServiceClient;
 import com.catalogoprodutosservice.feign.vo.UserDetailsVO;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -30,10 +32,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (isTokenValid(requestTokenHeader)) {
             try {
-                UserDetailsVO userDetails = authServiceClient.validateToken(requestTokenHeader);
+                var userDetailsVO = authServiceClient.validateToken(requestTokenHeader);
+                JwtUserDetails jwtUserDetails = userDetailsVO.toJwtUserDetails();
 
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+                AnonymousAuthenticationToken authenticationToken =
+                        new AnonymousAuthenticationToken(jwtUserDetails.getId().toString(), jwtUserDetails, jwtUserDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
                 chain.doFilter(request, response);

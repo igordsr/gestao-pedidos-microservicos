@@ -8,16 +8,21 @@ import java.util.UUID;
 
 public class JwtUserDetails extends User {
     private final Usuario usuario;
+
     public JwtUserDetails(Usuario usuario) {
         super(usuario.getEmail(), usuario.getPassword(), AuthorityUtils.createAuthorityList(usuario.getRole().name()));
         this.usuario = usuario;
     }
 
-    public UUID getId(){
+    public UUID getId() {
         return usuario.getId();
     }
 
-    public String getRole(){
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public String getRole() {
         return usuario.getRole().name();
     }
 }
