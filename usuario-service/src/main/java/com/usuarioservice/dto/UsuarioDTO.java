@@ -1,6 +1,7 @@
 package com.usuarioservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.usuarioservice.model.Role;
 import com.usuarioservice.model.Usuario;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -62,7 +63,9 @@ public record UsuarioDTO(
 
         @Size(min = 6)
         @NotNull(message = "A senha do usuário não pode ser null")
-        String password
+        String password,
+        @NotNull(message = "A Permissão do usuário não pode ser null")
+        Role role
 ) {
 
     public Usuario toUsuario() {
@@ -78,6 +81,7 @@ public record UsuarioDTO(
         usuario.setDataNascimento(dataNascimento);
         usuario.setCpf(cpf);
         usuario.setPassword(password);
+        usuario.setRole(role);
         return usuario;
     }
 
@@ -95,7 +99,8 @@ public record UsuarioDTO(
                 usuario.getEmail(),
                 usuario.getDataNascimento(),
                 usuario.getCpf(),
-                usuario.getPassword()
+                usuario.getPassword(),
+                usuario.getRole()
         );
     }
 }

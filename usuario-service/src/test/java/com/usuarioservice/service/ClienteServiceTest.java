@@ -3,6 +3,7 @@ package com.usuarioservice.service;
 import com.usuarioservice.controller.exception.modal.RegistroJaExisteException;
 import com.usuarioservice.controller.exception.modal.RegistroNaoEncontradoException;
 import com.usuarioservice.dto.UsuarioDTO;
+import com.usuarioservice.model.Role;
 import com.usuarioservice.model.Usuario;
 import com.usuarioservice.repository.UsuarioRepository;
 import com.usuarioservice.util.InstanceGeneratorHelper;
@@ -130,7 +131,8 @@ class UsuarioServiceTest {
                 "valentina.mariane.ramos@hotmail.com.br",
                 LocalDate.now(),
                 "58235909626",
-                "123456"
+                "123456",
+                Role.ROLE_ADMIN
         );
 
         when(this.usuarioRepository.findById(any(UUID.class))).thenReturn(Optional.of(usuario));

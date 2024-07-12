@@ -54,5 +54,5 @@ public class Usuario {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    public Role role = Role.ROLE_CLIENTE;
+    public Role role;
 }
