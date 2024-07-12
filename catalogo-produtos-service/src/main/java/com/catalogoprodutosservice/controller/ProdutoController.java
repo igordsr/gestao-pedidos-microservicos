@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +33,7 @@ import java.util.UUID;
 @Tag(name = "Produto")
 public class ProdutoController {
     private final ProdutoService produtoService;
+
     @Autowired
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
