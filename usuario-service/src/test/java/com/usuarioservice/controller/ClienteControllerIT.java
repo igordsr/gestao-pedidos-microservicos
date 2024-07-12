@@ -1,9 +1,10 @@
 package com.usuarioservice.controller;
 
-import com.usuarioservice.dto.UsuarioDTO;
-import com.usuarioservice.util.InstanceGeneratorHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.usuarioservice.dto.UsuarioDTO;
+import com.usuarioservice.model.Role;
+import com.usuarioservice.util.InstanceGeneratorHelper;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -100,7 +101,7 @@ class UsuarioControllerIT {
     @Test
     void encontrarUsuarioPorId() {
         final UUID id = UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5");
-        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000", "Praça da Sé", "lado ímpar", "Sé", "138", "1234567890", "joao@example.com", LocalDate.of(1990, 1, 1), "12345678901", "123456");
+        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000", "Praça da Sé", "lado ímpar", "Sé", "138", "1234567890", "joao@example.com", LocalDate.of(1990, 1, 1), "12345678901", "123456", Role.ROLE_ADMIN);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(usuarioDTO)
@@ -138,7 +139,7 @@ class UsuarioControllerIT {
     @Test
     void cadastrarUsuarioAlreadyExistsException() {
         final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000",
-                "Praça da Sé", "lado ímpar", "Sé", "138", "2737183089", "joao@example.com", LocalDate.of(1990, 1, 1), "91019677031", "123456");
+                "Praça da Sé", "lado ímpar", "Sé", "138", "2737183089", "joao@example.com", LocalDate.of(1990, 1, 1), "91019677031", "123456", Role.ROLE_ADMIN);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(usuarioDTO)
