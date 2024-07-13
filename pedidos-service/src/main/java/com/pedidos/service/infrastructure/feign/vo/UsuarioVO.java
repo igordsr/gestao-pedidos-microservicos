@@ -3,7 +3,7 @@ package com.pedidos.service.infrastructure.feign.vo;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record ClienteVO(
+public record UsuarioVO(
         UUID id,
         String nome,
         String endereco,

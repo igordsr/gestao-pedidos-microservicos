@@ -1,7 +1,7 @@
 package com.pedidos.service.infrastructure.service;
 
-import com.pedidos.service.infrastructure.feign.vo.ClienteVO;
-import com.pedidos.service.infrastructure.feign.ClienteServiceClient;
+import com.pedidos.service.infrastructure.feign.vo.UsuarioVO;
+import com.pedidos.service.infrastructure.feign.UsuarioServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,29 +21,29 @@ class ClienteServiceTest {
     private ClienteService clienteService;
 
     @Mock
-    private ClienteServiceClient clienteServiceClient;
+    private UsuarioServiceClient usuarioServiceClient;
 
     private UUID clienteId;
-    private ClienteVO clienteVO;
+    private UsuarioVO usuarioVO;
 
     @BeforeEach
     void setUp() {
         clienteId = UUID.randomUUID();
-        clienteVO = mock(ClienteVO.class);
+        usuarioVO = mock(UsuarioVO.class);
     }
 
     @Test
     void verificarExistencia_ClienteExiste_NoExceptionThrown() {
-        when(clienteServiceClient.getClienteById(clienteId)).thenReturn(clienteVO);
+        when(usuarioServiceClient.getUsuarioById(clienteId)).thenReturn(usuarioVO);
 
         clienteService.verificarExistencia(clienteId);
 
-        verify(clienteServiceClient).getClienteById(clienteId);
+        verify(usuarioServiceClient).getUsuarioById(clienteId);
     }
 
     @Test
     void verificarExistencia_ClienteNaoExiste_ThrowRuntimeException() {
-        when(clienteServiceClient.getClienteById(any(UUID.class))).thenReturn(null);
+        when(usuarioServiceClient.getUsuarioById(any(UUID.class))).thenReturn(null);
 
         assertThrows(RuntimeException.class, () -> clienteService.verificarExistencia(clienteId));
     }

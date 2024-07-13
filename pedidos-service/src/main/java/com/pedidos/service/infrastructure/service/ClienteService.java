@@ -1,8 +1,9 @@
 package com.pedidos.service.infrastructure.service;
 
 import com.pedidos.service.domain.contract.IClienteContract;
-import com.pedidos.service.infrastructure.feign.ClienteServiceClient;
-import com.pedidos.service.infrastructure.feign.vo.ClienteVO;
+import com.pedidos.service.infrastructure.config.SecurityUtils;
+import com.pedidos.service.infrastructure.feign.UsuarioServiceClient;
+import com.pedidos.service.infrastructure.feign.vo.UsuarioVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +12,16 @@ import java.util.UUID;
 
 @Service
 public class ClienteService implements IClienteContract {
-    private final ClienteServiceClient clienteServiceClient;
+    private final UsuarioServiceClient usuarioServiceClient;
     @Autowired
-    public ClienteService(ClienteServiceClient clienteServiceClient) {
-        this.clienteServiceClient = clienteServiceClient;
+    public ClienteService(UsuarioServiceClient usuarioServiceClient) {
+        this.usuarioServiceClient = usuarioServiceClient;
     }
 
     @Override
     public void verificarExistencia(UUID id) {
-        ClienteVO cliente = this.clienteServiceClient.getClienteById(id);
+        String currentToken = SecurityUtils.getCurrentToken();
+        UsuarioVO cliente = this.usuarioServiceClient.getUsuarioById(currentToken, id);
         if (Objects.isNull(cliente)) {
             throw new RuntimeException("Teste");
         }

@@ -1,5 +1,6 @@
 package com.pedidos.service.infrastructure.config;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pedidos.service.domain.exception.ComunicacaoApiException;
 import feign.Response;
@@ -8,11 +9,15 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class CustomErrorDecoder implements ErrorDecoder {
 
     @Override
     public Exception decode(String methodKey, Response response) {
+        if (Objects.equals(response.status(), HttpStatus.FORBIDDEN.value()) || Objects.equals(response.status(), HttpStatus.UNAUTHORIZED.value())) {
+            return new ComunicacaoApiException(response.status(), "Falha na autenticação: o token fornecido não possui privilégios ou é inválido ou expirado.", methodKey);
+        }
         try (InputStream bodyIs = response.body().asInputStream()) {
             final ObjectMapper objectMapper = new ObjectMapper();
             switch (response.status()) {
