@@ -29,7 +29,7 @@ public class SecurityUtils {
 
     public static UUID getCurrentUserUUID() {
         final JwtUserDetails currentUser = getCurrentUser();
-        if(!Objects.isNull(currentUser)){
+        if (!Objects.isNull(currentUser)) {
             return currentUser.getUserUUID();
         }
         return null;
