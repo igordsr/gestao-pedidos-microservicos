@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface PedidoRepository extends JpaRepository<PedidoEntity, UUID> {
     List<PedidoEntity> findByStatusPedido(StatusPedido statusPedido);
     List<PedidoEntity> findByStatusPedidoIn(Collection<StatusPedido> statusPedidos);
+    List<PedidoEntity> findByIdCliente(final UUID idCliente);
 }

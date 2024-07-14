@@ -4,6 +4,7 @@ import com.pedidos.service.domain.contract.IManderDadosPedidoContract;
 import com.pedidos.service.domain.exception.RegistroNaoEncontradoException;
 import com.pedidos.service.domain.model.Pedido;
 import com.pedidos.service.domain.model.StatusPedido;
+import com.pedidos.service.infrastructure.config.SecurityUtils;
 import com.pedidos.service.infrastructure.persistence.entity.PedidoEntity;
 import com.pedidos.service.infrastructure.persistence.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,12 @@ public class PedidoService implements IManderDadosPedidoContract {
     @Override
     public List<Pedido> consultarPeloStatus(List<StatusPedido> statusPedido) throws RegistroNaoEncontradoException {
         final List<PedidoEntity> pedidos = this.pedidoRepository.findByStatusPedidoIn(statusPedido);
+        return this.mapTpListPedidos(pedidos);
+    }
+
+    @Override
+    public List<Pedido> consultarPeloIdClienteByToken() throws RegistroNaoEncontradoException {
+        final List<PedidoEntity> pedidos = this.pedidoRepository.findByIdCliente(SecurityUtils.getCurrentUserUUID());
         return this.mapTpListPedidos(pedidos);
     }
 

@@ -44,4 +44,9 @@ public class FeignConfig {
         return new Retryer.Default(100, SECONDS.toMillis(1), 5);
     }
 
+    @Bean
+    public FeignClientInterceptor feignClientInterceptor() {
+        return new FeignClientInterceptor();
+    }
+
 }

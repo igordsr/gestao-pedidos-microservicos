@@ -1,4 +1,4 @@
-package com.pedidos.service.infrastructure.config;
+package com.catalogoprodutosservice.configuration;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

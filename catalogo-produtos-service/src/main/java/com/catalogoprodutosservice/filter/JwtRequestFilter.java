@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -35,8 +36,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 var userDetailsVO = authServiceClient.validateToken(requestTokenHeader);
                 JwtUserDetails jwtUserDetails = userDetailsVO.toJwtUserDetails();
 
-                AnonymousAuthenticationToken authenticationToken =
-                        new AnonymousAuthenticationToken(jwtUserDetails.getId().toString(), jwtUserDetails, jwtUserDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(jwtUserDetails, requestTokenHeader, jwtUserDetails.getAuthorities());
+
+
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
                 chain.doFilter(request, response);

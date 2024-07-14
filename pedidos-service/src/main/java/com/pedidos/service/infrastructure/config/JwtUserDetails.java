@@ -2,25 +2,56 @@ package com.pedidos.service.infrastructure.config;
 
 
 import com.pedidos.service.infrastructure.feign.vo.UserDetailsVO;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Principal;
+import java.util.Collection;
 import java.util.UUID;
 
-public class JwtUserDetails extends User implements Principal {
+public class JwtUserDetails implements UserDetails {
     private UserDetailsVO usuario;
 
     public JwtUserDetails(UserDetailsVO userDetailsVO) {
-        super(userDetailsVO.getUsername(), UUID.randomUUID().toString(), userDetailsVO.getAuthorities());
         this.usuario = userDetailsVO;
     }
 
-    public UUID getId() {
-        return usuario.getUserId();
+
+    public UUID getUserUUID() {
+        return this.usuario.getUserId();
     }
 
     @Override
-    public String getName() {
-        return usuario.getUsername();
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.usuario.getAuthorities();
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.usuario.getUsername();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.usuario.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.usuario.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.usuario.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.usuario.isEnabled();
     }
 }

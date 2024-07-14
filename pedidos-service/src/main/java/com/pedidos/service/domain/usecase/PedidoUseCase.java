@@ -33,6 +33,11 @@ public final class PedidoUseCase implements IPedidoContract {
     }
 
     @Override
+    public List<Pedido> consultarPeloIdClienteByToken() {
+        return this.manterPedido.consultarPeloIdClienteByToken();
+    }
+
+    @Override
     public Pedido cadastrar(Pedido pedido) throws CustomException {
         this.manterCliente.verificarExistencia(pedido.getCliente());
         final List<Item> produtos = this.materProduto.consultarProdutos(pedido.getItemList().stream().map(Item::getProduto).toList());

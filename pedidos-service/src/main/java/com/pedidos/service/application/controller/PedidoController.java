@@ -64,6 +64,14 @@ public class PedidoController {
         return new ResponseEntity<>(pedidoDTOS, HttpStatus.OK);
     }
 
+    @GetMapping()
+    @Operation(summary = "Listar Pedidos", description = "Esté metodo tem como finalidade listar todos os pedidos do usuário", method = "GET")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Listar de pedidos"),})
+    public ResponseEntity<List<PedidoDTO>> consultarPeloIdClienteByToken() throws CustomException {
+        List<PedidoDTO> pedidoDTOS = this.pedidoGateway.consultarPeloIdClienteByToken();
+        return new ResponseEntity<>(pedidoDTOS, HttpStatus.OK);
+    }
+
     @PutMapping("{identificador}/transportar")
     @Operation(summary = "Transportar Pedido", description = "Esté metodo tem como finalidade de atualizar o status do pedido para 'AGUARDANDO ENTREGA', quando for iniciado o transpote do pedido para o cliente", method = "PUT")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Status do pedido atualizado com sucesso"),})
