@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface UsuarioServiceClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/usuario/{id}", produces = "application/json")
-    UsuarioVO getUsuarioById(@RequestHeader("Authorization") String token, @PathVariable("id") UUID id);
+    UsuarioVO getUsuarioById(@PathVariable("id") UUID id);
 
     @RequestMapping(method = RequestMethod.GET, value = "/auth", produces = "application/json")
     UserDetailsVO validateToken(@RequestHeader("Authorization") String token);

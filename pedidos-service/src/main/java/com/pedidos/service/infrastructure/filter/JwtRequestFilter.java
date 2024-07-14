@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -37,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 JwtUserDetails jwtUserDetails = userDetailsVO.toJwtUserDetails();
 
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(jwtUserDetails.getUsername(), requestTokenHeader, jwtUserDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(jwtUserDetails, requestTokenHeader, jwtUserDetails.getAuthorities());
 
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

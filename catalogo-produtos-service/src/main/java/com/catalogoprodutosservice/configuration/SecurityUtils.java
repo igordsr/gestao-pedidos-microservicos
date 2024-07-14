@@ -1,4 +1,4 @@
-package com.pedidos.service.infrastructure.config;
+package com.catalogoprodutosservice.configuration;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +29,7 @@ public class SecurityUtils {
 
     public static UUID getCurrentUserUUID() {
         final JwtUserDetails currentUser = getCurrentUser();
-        if(!Objects.isNull(currentUser)){
+        if (!Objects.isNull(currentUser)) {
             return currentUser.getUserUUID();
         }
         return null;
