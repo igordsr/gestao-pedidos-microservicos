@@ -3,10 +3,16 @@ package com.catalogoprodutosservice.controller.exception.modal;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties({"cause", "stackTrace", "suppressed", "localizedMessage"})
 public abstract class CustomException extends RuntimeException {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
@@ -24,26 +30,9 @@ public abstract class CustomException extends RuntimeException {
     @JsonProperty(value = "path")
     protected String path;
 
-    public int getCode() {
-        return code;
-    }
-
     @Override
     public String getMessage() {
         return message;
     }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setDetails(List<String> details) {
-        this.details = details;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
 
 }
