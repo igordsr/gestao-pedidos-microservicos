@@ -6,6 +6,7 @@ import com.usuarioservice.dto.UsuarioDTO;
 import com.usuarioservice.model.Role;
 import com.usuarioservice.util.InstanceGeneratorHelper;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,22 @@ class UsuarioControllerIT {
 
     @LocalServerPort
     private int port;
+    private String jwtToken;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        jwtToken = obtainJwtToken("joao@gmail.com", "string"); // Mudar conforme seu setup de autenticação
+    }
+
+    private String obtainJwtToken(String username, String password) {
+        Response response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("{\"email\":\"" + username + "\", \"password\":\"" + password + "\"}")
+                .when()
+                .post("/auth"); // Mudar conforme o endpoint de autenticação
+        return response.jsonPath().getString("token");
     }
 
     @Test
@@ -64,10 +76,11 @@ class UsuarioControllerIT {
 
     @Test
     void atualizar() {
-        final UUID id = UUID.fromString("fabb6ed4-eb55-4913-b1a9-607e3b3567bd");
+        final UUID id = UUID.fromString("e7fa5ecf-42a4-11ef-aff1-d05099ff5204");
         final UsuarioDTO usuarioDTO = InstanceGeneratorHelper.getUsuarioDTO();
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(usuarioDTO)
                 .when()
                 .put("/usuario/{id}", id)
@@ -88,9 +101,10 @@ class UsuarioControllerIT {
 
     @Test
     void deletar() {
-        final UUID id = UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5");
+        final UUID id = UUID.fromString("e7fa5f37-42a4-11ef-aff1-d05099ff5204");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .delete("/usuario/{id}", id)
                 .then()
@@ -100,10 +114,11 @@ class UsuarioControllerIT {
 
     @Test
     void encontrarUsuarioPorId() {
-        final UUID id = UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5");
-        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000", "Praça da Sé", "lado ímpar", "Sé", "138", "1234567890", "joao@example.com", LocalDate.of(1990, 1, 1), "12345678901", "123456", Role.ROLE_ADMIN);
+        final UUID id = UUID.fromString("e7fa5b83-42a4-11ef-aff1-d05099ff5204");
+        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("e7fa5b83-42a4-11ef-aff1-d05099ff5204"), "João Silva", "01001-000", "Praça da Sé", "lado ímpar", "Sé", "138", "1234567890", "joao@gmail.com", LocalDate.of(1990, 1, 1), "12345678901", "123456", Role.ROLE_ADMIN);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(usuarioDTO)
                 .when()
                 .get("/usuario/{id}", id)
@@ -127,6 +142,7 @@ class UsuarioControllerIT {
         List<UsuarioDTO> usuariosDTO = InstanceGeneratorHelper.getUsuariosDTO();
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .get("/usuario")
                 .then()
@@ -138,10 +154,11 @@ class UsuarioControllerIT {
 
     @Test
     void cadastrarUsuarioAlreadyExistsException() {
-        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("1f7b366b-b51a-47c1-8b5e-8e9c8a1055f5"), "João Silva", "01001-000",
-                "Praça da Sé", "lado ímpar", "Sé", "138", "2737183089", "joao@example.com", LocalDate.of(1990, 1, 1), "91019677031", "123456", Role.ROLE_ADMIN);
+        final UsuarioDTO usuarioDTO = new UsuarioDTO(UUID.fromString("e7fa5b83-42a4-11ef-aff1-d05099ff5204"), "João Silva", "01001-000",
+                "Praça da Sé", "lado ímpar", "Sé", "138", "2737183089", "joao@gmail.com", LocalDate.of(1990, 1, 1), "91019677031", "123456", Role.ROLE_ADMIN);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(usuarioDTO)
                 .when()
                 .post("/usuario")
@@ -159,6 +176,7 @@ class UsuarioControllerIT {
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(usuarioDTO)
                 .when()
                 .put("/usuario/{id}", id)
@@ -174,6 +192,7 @@ class UsuarioControllerIT {
         final UUID id = UUID.fromString("66342f0e-24fb-4cea-812f-dffbe915f180");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .delete("/usuario/{id}", id)
                 .then()

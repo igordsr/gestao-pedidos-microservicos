@@ -1,5 +1,6 @@
 package com.usuarioservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.usuarioservice.model.Role;
 import com.usuarioservice.model.Usuario;
@@ -54,6 +55,7 @@ public record UsuarioDTO(
         @NotBlank(message = "O telefone do usuario não pode estar em Branco.")
         String email,
         @Schema(example = "1991-02-15")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         @NotNull(message = "A data de nascimento não pode estar em branco")
         LocalDate dataNascimento,
         @CPF
