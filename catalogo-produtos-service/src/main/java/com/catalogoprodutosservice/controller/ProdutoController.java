@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController()
-@RequestMapping(value = "/produto", produces = {"application/json"})
+@RequestMapping(value = "/produto", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Produto")
 public class ProdutoController {
     private final ProdutoService produtoService;

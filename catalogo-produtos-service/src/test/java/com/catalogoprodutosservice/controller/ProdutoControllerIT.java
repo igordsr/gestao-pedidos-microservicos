@@ -1,14 +1,19 @@
 package com.catalogoprodutosservice.controller;
 
 import com.catalogoprodutosservice.dto.ProdutoDTO;
+import com.catalogoprodutosservice.feign.UsuarioServiceClient;
+import com.catalogoprodutosservice.feign.vo.UserDetailsVO;
 import com.catalogoprodutosservice.util.InstanceGeneratorHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.parsing.Parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,10 +36,16 @@ class ProdutoControllerIT {
     @LocalServerPort
     private int port;
 
+    @MockBean
+    private UsuarioServiceClient usuarioServiceClient;
+    private String jwtToken = InstanceGeneratorHelper.token;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        RestAssured.defaultParser = Parser.JSON;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        Mockito.when(usuarioServiceClient.validateToken(Mockito.anyString())).thenReturn(InstanceGeneratorHelper.getUserDetailsVO());
     }
 
     @Test
@@ -42,6 +53,7 @@ class ProdutoControllerIT {
         final ProdutoDTO produtoDTO = InstanceGeneratorHelper.getProdutoDTO();
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(produtoDTO)
                 .when()
                 .post("/produto")
@@ -60,6 +72,7 @@ class ProdutoControllerIT {
         final ProdutoDTO produtoDTO = InstanceGeneratorHelper.getProdutoDTO();
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(produtoDTO)
                 .when()
                 .put("/produto/{id}", id)
@@ -78,6 +91,7 @@ class ProdutoControllerIT {
         final UUID id = UUID.fromString("9a1f4dd7-151e-4b33-8a60-30cf5e5f0dd0");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .delete("/produto/{id}", id)
                 .then()
@@ -91,6 +105,7 @@ class ProdutoControllerIT {
         final ProdutoDTO produtoDTO = new ProdutoDTO(UUID.fromString("4e22b5fc-d4c2-4c50-aebf-1f935246ee0c"), "Produto 2", "Descrição do Produto 2", 20.75, 150);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .get("/produto/{id}", id)
                 .then()
@@ -108,6 +123,7 @@ class ProdutoControllerIT {
         List<ProdutoDTO> produtosDTO = InstanceGeneratorHelper.getProdutosDTO();
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .get("/produto")
                 .then()
@@ -122,6 +138,7 @@ class ProdutoControllerIT {
         final ProdutoDTO produtoDTO = new ProdutoDTO(UUID.fromString("4e22b5fc-d4c2-4c50-aebf-1f935246ee0c"), "Produto 2", "Descrição do Produto 2", 20.75, 50);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .put("/produto/{id}/decrementarEstoque/{quantidade}", id, 100)
                 .then()
@@ -140,6 +157,7 @@ class ProdutoControllerIT {
         final ProdutoDTO produtoDTO = new ProdutoDTO(UUID.fromString("4e22b5fc-d4c2-4c50-aebf-1f935246ee0c"), "Produto 2", "Descrição do Produto 2", 20.75, 250);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .patch("/produto/{id}/incrementarEstoque/{quantidade}", id, 100)
                 .then()
@@ -156,6 +174,7 @@ class ProdutoControllerIT {
         final ProdutoDTO produtoDTO = new ProdutoDTO(UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"), "Produto 1", "Descrição do Produto 1", 10.50, 100);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(produtoDTO)
                 .when()
                 .post("/produto")
@@ -173,6 +192,7 @@ class ProdutoControllerIT {
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .body(produtoDTO)
                 .when()
                 .put("/produto/{id}", id)
@@ -188,6 +208,7 @@ class ProdutoControllerIT {
         final UUID id = UUID.fromString("66342f0e-24fb-4cea-812f-dffbe915f180");
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .delete("/produto/{id}", id)
                 .then()
@@ -203,6 +224,7 @@ class ProdutoControllerIT {
         final ProdutoDTO produtoDTO = new ProdutoDTO(UUID.fromString("4e22b5fc-d4c2-4c50-aebf-1f935246ee0c"), "Produto 2", "Descrição do Produto 2", 20.75, 350);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + jwtToken)
                 .when()
                 .put("/produto/{id}/decrementarEstoque/{quantidade}", id, 450)
                 .then()
