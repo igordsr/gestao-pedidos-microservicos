@@ -5,6 +5,7 @@ import com.pedidos.service.domain.contract.IManderDadosPedidoContract;
 import com.pedidos.service.domain.contract.IProdutoContract;
 import com.pedidos.service.domain.dto.PedidoDTO;
 import com.pedidos.service.domain.dto.RelatorioDTO;
+import com.pedidos.service.domain.exception.RegistroNaoEncontradoException;
 import com.pedidos.service.domain.model.Pedido;
 import com.pedidos.service.domain.usecase.PedidoUseCase;
 
@@ -30,19 +31,19 @@ public class PedidoGateway {
 
 
     public PedidoDTO atualizarPedido(UUID identificador, PedidoDTO pedidoDTOAtualizado) {
-    Pedido pedido = this.pedidoUseCase.consultarPeloIdentificador(identificador);
-    if (pedido == null) {
-        throw new RegistroNaoEncontradoException("Pedido não encontrado.");
-    }
-        
+        Pedido pedido = this.pedidoUseCase.consultarPeloIdentificador(identificador);
+        if (pedido == null) {
+            throw new RegistroNaoEncontradoException("Pedido não encontrado.");
+        }
+
         if (pedidoDTOAtualizado.itemList() == null || pedidoDTOAtualizado.itemList().isEmpty()) {
             this.pedidoUseCase.deletarPedido(pedido);
-            return null; 
+            return null;
         } else {
             Pedido pedidoAtualizado = pedidoUseCase.atualizarPedido(pedido.getIdentificador(), pedidoDTOAtualizado.toModal());
             return pedidoAtualizado.toDTO();
         }
-}
+    }
 
     public List<RelatorioDTO> gerarRelatorioPedidosPagos() {
         List<PedidoDTO> list = this.pedidoUseCase.gerarRelatorioPedidosPagos().stream().map(Pedido::toDTO).toList();
