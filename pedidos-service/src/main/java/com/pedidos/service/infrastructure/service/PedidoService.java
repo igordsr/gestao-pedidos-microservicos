@@ -5,6 +5,7 @@ import com.pedidos.service.domain.exception.RegistroNaoEncontradoException;
 import com.pedidos.service.domain.model.Pedido;
 import com.pedidos.service.domain.model.StatusPedido;
 import com.pedidos.service.infrastructure.config.SecurityUtils;
+import com.pedidos.service.infrastructure.persistence.entity.ItemEntity;
 import com.pedidos.service.infrastructure.persistence.entity.PedidoEntity;
 import com.pedidos.service.infrastructure.persistence.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +57,11 @@ public class PedidoService implements IManderDadosPedidoContract {
     }
 
     @Override
-    public Pedido atualizar(Pedido objeto) {
-        final PedidoEntity pedidoEntity = this.pedidoRepository.findById(objeto.getIdentificador()).orElseThrow(() -> new RegistroNaoEncontradoException(objeto.getIdentificador().toString()));
+    public Pedido atualizar(UUID identificador, Pedido objeto) {
+        final PedidoEntity pedidoEntity = this.pedidoRepository.findById(identificador).orElseThrow(() -> new RegistroNaoEncontradoException(objeto.getIdentificador().toString()));
+        final List<ItemEntity> itens = ItemEntity.getInstance(pedidoEntity, objeto.getItemList());
         pedidoEntity.setStatusPedido(objeto.getStatusPedido());
+        pedidoEntity.setItens(itens);
         return this.pedidoRepository.save(pedidoEntity).toModal();
     }
 

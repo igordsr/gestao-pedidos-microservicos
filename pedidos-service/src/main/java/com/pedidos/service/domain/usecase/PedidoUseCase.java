@@ -38,7 +38,7 @@ public final class PedidoUseCase implements IPedidoContract {
         if (pedidoAtualizado == null) {
             throw new RuntimeException("Pedido não encontrado.");
         }
-        return this.manterPedido.atualizar(pedidoAtualizado);
+        return this.manterPedido.atualizar(identificador, pedidoAtualizado);
     }
 
     @Override
@@ -70,7 +70,7 @@ public final class PedidoUseCase implements IPedidoContract {
             this.materProduto.diminuirQuantidadeProdutoEstoque(item.getProduto(), item.getQuantidade());
         }
         pedido.setStatusPedido(StatusPedido.PAGO);
-        return this.manterPedido.atualizar(pedido);
+        return this.manterPedido.atualizar(identificador, pedido);
     }
 
     @Override
@@ -88,7 +88,7 @@ public final class PedidoUseCase implements IPedidoContract {
             throw new EntidadeNaoProcessavelException(errorMsg);
         }
         pedido.setStatusPedido(StatusPedido.AGUARDANDO_ENTREGA);
-        return this.manterPedido.atualizar(pedido);
+        return this.manterPedido.atualizar(identificador, pedido);
     }
 
     @Override
@@ -99,7 +99,7 @@ public final class PedidoUseCase implements IPedidoContract {
             throw new EntidadeNaoProcessavelException(errorMsg);
         }
         pedido.setStatusPedido(StatusPedido.ENTREGUE);
-        return this.manterPedido.atualizar(pedido);
+        return this.manterPedido.atualizar(identificador, pedido);
     }
 
     private void verificarDisponibilidadeDoProduto(final Pedido pedido, final List<Item> items) {
