@@ -32,6 +32,20 @@ public final class PedidoUseCase implements IPedidoContract {
         return this.manterPedido.consultarPeloIdentificador(identificador);
     }
 
+
+    @Override
+    public Pedido atualizarPedido(UUID identificador, Pedido pedidoAtualizado) throws RegistroNaoEncontradoException {
+        if (pedidoAtualizado == null) {
+            throw new RuntimeException("Pedido não encontrado.");
+        }
+        return this.manterPedido.atualizar(pedidoAtualizado);
+    }
+
+    @Override
+    public void deletarPedido(Pedido pedido) throws RegistroNaoEncontradoException {
+        this.manterPedido.deletar(pedido);
+    }
+
     @Override
     public List<Pedido> consultarPeloIdClienteByToken() {
         return this.manterPedido.consultarPeloIdClienteByToken();

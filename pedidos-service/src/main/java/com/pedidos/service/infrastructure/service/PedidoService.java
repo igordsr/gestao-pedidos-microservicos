@@ -63,6 +63,11 @@ public class PedidoService implements IManderDadosPedidoContract {
     }
 
     @Override
+    public void deletar(Pedido objeto) {
+        this.pedidoRepository.delete(PedidoEntity.getInstance(objeto));
+    }
+
+    @Override
     public List<Pedido> atualizar(List<Pedido> objeto) {
         List<UUID> uuids = objeto.stream().map(Pedido::getIdentificador).toList();
         List<PedidoEntity> pedidoEntities = this.pedidoRepository.findAllById(uuids);

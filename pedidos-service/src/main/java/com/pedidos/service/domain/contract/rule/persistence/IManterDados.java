@@ -15,4 +15,6 @@ public interface IManterDados<T> {
     @Transactional
     List<T> atualizar(List<T> objeto);
 
+    @Transactional
+    void deletar(T objeto);
 }

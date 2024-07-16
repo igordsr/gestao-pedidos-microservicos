@@ -48,6 +48,23 @@ public class PedidoController {
         return new ResponseEntity<>(pedidoDTO, HttpStatus.CREATED);
     }
 
+     @PatchMapping("{identificador}/atualizar")
+@Operation(summary = "Atualizar Pedido", description = "Este método tem como finalidade permitir a atualização parcial de um pedido no sistema.", method = "PATCH")
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Pedido atualizado com sucesso"),
+    @ApiResponse(responseCode = "404", description = "Pedido não encontrado")
+})
+public ResponseEntity<PedidoDTO> atualizarPedido(@PathVariable UUID identificador, @RequestBody @Valid PedidoDTO pedidoDTOAtualizado) {
+    try {
+        PedidoDTO pedidoDTO = this.pedidoGateway.atualizarPedido(identificador, pedidoDTOAtualizado);
+        return new ResponseEntity<>(pedidoDTO, HttpStatus.OK);
+    } catch (RegistroNaoEncontradoException e) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
     @PutMapping("{identificador}/efetuar-pagamento")
     @Operation(summary = "Pagar de Pedido", description = "Esté metodo tem como finalidade permitir o pagamento do pedido no sistema", method = "PUT")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Pagamento do pedido realizado com sucesso"),})

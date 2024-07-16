@@ -28,6 +28,22 @@ public class PedidoGateway {
         return pedidoDTO;
     }
 
+
+    public PedidoDTO atualizarPedido(UUID identificador, PedidoDTO pedidoDTOAtualizado) {
+    Pedido pedido = this.pedidoUseCase.consultarPeloIdentificador(identificador);
+    if (pedido == null) {
+        throw new RegistroNaoEncontradoException("Pedido não encontrado.");
+    }
+        
+        if (pedidoDTOAtualizado.itemList() == null || pedidoDTOAtualizado.itemList().isEmpty()) {
+            this.pedidoUseCase.deletarPedido(pedido);
+            return null; 
+        } else {
+            Pedido pedidoAtualizado = pedidoUseCase.atualizarPedido(pedido.getIdentificador(), pedidoDTOAtualizado.toModal());
+            return pedidoAtualizado.toDTO();
+        }
+}
+
     public List<RelatorioDTO> gerarRelatorioPedidosPagos() {
         List<PedidoDTO> list = this.pedidoUseCase.gerarRelatorioPedidosPagos().stream().map(Pedido::toDTO).toList();
         return list.stream().map(item -> new RelatorioDTO(item.identificador(), item.cliente(), item.itemList())).toList();
