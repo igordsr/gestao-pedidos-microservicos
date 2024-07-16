@@ -42,4 +42,8 @@ public class PedidoEntity implements IConverterToModal<Pedido> {
         pedidoEntity.itens = ItemEntity.getInstance(pedidoEntity, objeto.getItemList());
         return pedidoEntity;
     }
+
+    public void setItens(List<ItemEntity> itens) {
+        this.itens = itens;
+    }
 }
