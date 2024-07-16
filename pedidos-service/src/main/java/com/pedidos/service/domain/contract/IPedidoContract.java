@@ -15,4 +15,5 @@ public interface IPedidoContract extends ICadastrarPedido, ILiquidarPedido, IGer
     Pedido atualizarPedido(UUID identificador, Pedido pedidoAtualizado) throws RegistroNaoEncontradoException;
     void deletarPedido(Pedido pedido) throws RegistroNaoEncontradoException;
     List<Pedido> consultarPeloIdClienteByToken();
+    List<Pedido> listarPedidos();
 }

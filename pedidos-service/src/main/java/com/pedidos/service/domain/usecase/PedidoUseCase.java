@@ -11,8 +11,8 @@ import com.pedidos.service.domain.model.Item;
 import com.pedidos.service.domain.model.Pedido;
 import com.pedidos.service.domain.model.StatusPedido;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -33,12 +33,38 @@ public final class PedidoUseCase implements IPedidoContract {
     }
 
 
-    @Override
     public Pedido atualizarPedido(UUID identificador, Pedido pedidoAtualizado) throws RegistroNaoEncontradoException {
-        if (pedidoAtualizado == null) {
-            throw new RuntimeException("Pedido não encontrado.");
+        // Criar um mapa para armazenar os itens do pedido existente por produto
+        Map<UUID, Item> itemMap = new HashMap<>();
+        for (Item item : pedidoAtualizado.getItemList()) {
+            UUID produto = item.getProduto();
+            int quantidade = item.getQuantidade();
+
+            // Verificar se o produto já existe no mapa
+            if (itemMap.containsKey(produto)) {
+                // Se existir, somar a quantidade
+                Item itemExistente = itemMap.get(produto);
+                itemExistente = new Item(produto, itemExistente.getQuantidade() + quantidade);
+                itemMap.put(produto, itemExistente);
+            } else {
+                // Se não existir, adicionar o item ao mapa
+                itemMap.put(produto, new Item(produto, quantidade));
+            }
         }
-        return this.manterPedido.atualizar(identificador, pedidoAtualizado);
+
+        // Criar uma lista com os itens atualizados
+        List<Item> itensAtualizados = new ArrayList<>(itemMap.values());
+
+        // Criar um novo pedido com a lista de itens atualizada
+        Pedido pedidoAtualizadoComItens = new Pedido(
+                pedidoAtualizado.getIdentificador(),
+                pedidoAtualizado.getCliente(),
+                itensAtualizados,
+                pedidoAtualizado.getStatusPedido()
+        );
+
+        // Atualizar o pedido no sistema de manutenção de pedidos
+        return this.manterPedido.atualizar(identificador, pedidoAtualizadoComItens);
     }
 
     @Override
@@ -49,6 +75,11 @@ public final class PedidoUseCase implements IPedidoContract {
     @Override
     public List<Pedido> consultarPeloIdClienteByToken() {
         return this.manterPedido.consultarPeloIdClienteByToken();
+    }
+
+    @Override
+    public List<Pedido> listarPedidos() {
+        return this.manterPedido.listarPedidos();
     }
 
     @Override

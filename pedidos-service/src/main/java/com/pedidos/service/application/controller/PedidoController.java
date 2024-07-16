@@ -65,6 +65,15 @@ public class PedidoController {
         }
     }
 
+    @GetMapping("/listar-tudo")
+    @Operation(summary = "Listar Pedidos", description = "Consultar os listar de Pedidos", method = "GET")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Listar de Pedidos"),})
+    public ResponseEntity<List<PedidoDTO>> listarPedidos() throws RegistroNaoEncontradoException {
+        List<PedidoDTO> pedidoDTO = this.pedidoGateway.listarPedidos();
+        return new ResponseEntity<>(pedidoDTO, HttpStatus.OK);
+    }
+
+
     @PutMapping("{identificador}/efetuar-pagamento")
     @Operation(summary = "Pagar de Pedido", description = "Esté metodo tem como finalidade permitir o pagamento do pedido no sistema", method = "PUT")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Pagamento do pedido realizado com sucesso"),})

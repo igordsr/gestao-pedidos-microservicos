@@ -16,4 +16,6 @@ public interface IConsultarPedido {
 
     List<Pedido> consultarPeloIdClienteByToken() throws RegistroNaoEncontradoException;
 
+    List<Pedido> listarPedidos();
+
 }
