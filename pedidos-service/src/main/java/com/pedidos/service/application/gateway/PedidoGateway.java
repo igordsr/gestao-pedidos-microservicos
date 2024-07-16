@@ -69,4 +69,9 @@ public class PedidoGateway {
         List<Pedido> pedidos = this.pedidoUseCase.consultarPeloIdClienteByToken();
         return pedidos.stream().map(Pedido::toDTO).toList();
     }
+
+    public List<PedidoDTO> listarPedidos() {
+        List<Pedido> pedidos = this.pedidoUseCase.listarPedidos();
+        return pedidos.stream().map(Pedido::toDTO).toList();
+    }
 }

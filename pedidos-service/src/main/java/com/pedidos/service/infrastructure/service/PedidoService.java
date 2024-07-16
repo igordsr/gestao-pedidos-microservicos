@@ -50,6 +50,11 @@ public class PedidoService implements IManderDadosPedidoContract {
     }
 
     @Override
+    public List<Pedido> listarPedidos() {
+        return this.pedidoRepository.findAll().stream().map(PedidoEntity::toModal).toList();
+    }
+
+    @Override
     public Pedido cadastrar(Pedido objeto) {
         PedidoEntity pedidoEntity = PedidoEntity.getInstance(objeto);
         pedidoEntity = this.pedidoRepository.save(pedidoEntity);
