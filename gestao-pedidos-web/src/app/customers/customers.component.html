@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between mb-3"></div>
+
+  <h2 *ngIf="!customers.length">Não há clientes há serem exibidos!</h2>
+  <mat-table
+    *ngIf="customers.length"
+    [dataSource]="customers"
+    class="mat-elevation-z8"
+  >
+    <ng-container matColumnDef="nome">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let customer"> {{ customer.nome }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="cpf">
+      <mat-header-cell *matHeaderCellDef> CPF </mat-header-cell>
+      <mat-cell *matCellDef="let customer"> {{ customer.cpf }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef> E-mail </mat-header-cell>
+      <mat-cell *matCellDef="let customer"> {{ customer.email }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="telefone">
+      <mat-header-cell *matHeaderCellDef> Telefone </mat-header-cell>
+      <mat-cell *matCellDef="let customer">
+        {{ customer.telefone }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="logradouro">
+      <mat-header-cell *matHeaderCellDef> Endereço </mat-header-cell>
+      <mat-cell *matCellDef="let customer">
+        {{ customer.logradouro }}
+      </mat-cell>
+    </ng-container>
+
+    logradouro
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let customer">
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="deleteCustomer(customer.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef=" ['nome', 'cpf', 'email', 'telefone', 'logradouro', 'actions']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns:  ['nome', 'cpf', 'email', 'telefone', 'logradouro', 'actions']"></mat-row>
+  </mat-table>
+</div>

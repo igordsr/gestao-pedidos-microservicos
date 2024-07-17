@@ -1,0 +1,91 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-center mb-3">
+    <div class="d-flex" *ngIf="type !== 'ADMIN'">
+      <button
+        mat-raised-button
+        color="primary"
+        style="margin-right: 15px"
+        (click)="comprar()"
+      >
+        {{ pedidos.length ? "Continuar comprando" : "Comprar" }}
+      </button>
+    </div>
+  </div>
+
+  <h2 *ngIf="!pedidos.length">Seu carrinho está vazio!</h2>
+
+  <mat-table
+    *ngIf="!isLoading && pedidos.length > 0"
+    [dataSource]="pedidos"
+    class="mat-elevation-z8"
+  >
+    <ng-container matColumnDef="nome">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let pedido"> {{ pedido.nome }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="descricao">
+      <mat-header-cell *matHeaderCellDef> Descrição </mat-header-cell>
+      <mat-cell *matCellDef="let pedido"> {{ pedido.descricao }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="preco">
+      <mat-header-cell *matHeaderCellDef> Preço </mat-header-cell>
+      <mat-cell *matCellDef="let pedido">
+        {{ pedido.preco | currency : "BRL" }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="quantidade">
+      <mat-header-cell *matHeaderCellDef> Quantidade </mat-header-cell>
+      <mat-cell *matCellDef="let pedido">
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="incrementar(pedido.idPedido!, pedido.id, pedido.quantidade)"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        {{ pedido.quantidade }}
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="decrementar(pedido.idPedido!, pedido.id, pedido.quantidade)"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let pedido">
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="onDelete(pedido.idPedido, pedido.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="rowDef"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: rowDef"></mat-row>
+  </mat-table>
+
+  <p class="d-flex justify-content-center mt-3">
+    <strong>Total: {{ total | currency : "BRL" }}</strong>
+  </p>
+
+  <div class="d-flex justify-content-center mt-3" *ngIf="pedidos.length > 0">
+    <button
+      mat-raised-button
+      color="primary"
+      style="margin-right: 15px"
+      (click)="onPay()"
+    >
+      Efetuar Pagamento
+    </button>
+  </div>
+</div>
