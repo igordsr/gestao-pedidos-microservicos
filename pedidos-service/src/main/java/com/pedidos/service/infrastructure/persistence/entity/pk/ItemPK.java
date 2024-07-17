@@ -2,12 +2,13 @@ package com.pedidos.service.infrastructure.persistence.entity.pk;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.UUID;
 
+@Getter
 @Embeddable
 @NoArgsConstructor
 public class ItemPK implements Serializable {
