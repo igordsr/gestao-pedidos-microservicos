@@ -1,0 +1,77 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<app-menu
+  (perfilClick)="
+    perfil = true;
+    product = false;
+    customer = false;
+    cart = false;
+    pedido = false
+  "
+  (productClick)="
+    product = true;
+    perfil = false;
+    customer = false;
+    cart = false;
+    pedido = false
+  "
+  (customerClick)="
+    product = false;
+    perfil = false;
+    customer = true;
+    cart = false;
+    pedido = false
+  "
+  (cartClick)="
+    product = false;
+    perfil = false;
+    customer = false;
+    cart = true;
+    pedido = false
+  "
+  (pedidoClick)="
+    product = false;
+    perfil = false;
+    customer = false;
+    cart = false;
+    pedido = true
+  "
+>
+  <div [hidden]="!perfil">
+    <app-cadastro
+      [isPerfil]="true"
+      (setLoading)="isLoading = $event"
+    ></app-cadastro>
+  </div>
+
+  <div [hidden]="!cart">
+    <app-cart
+      [type]="type"
+      [reloadCart]="reloadCart"
+      (setLoading)="isLoading = $event"
+      (changeTabMenu)="changeTabMenu($event)"
+    ></app-cart>
+  </div>
+
+  <div [hidden]="!product">
+    <app-products-to-buy
+      *ngIf="type !== 'ADMIN'"
+      [fromMenu]="true"
+      (setLoading)="isLoading = $event"
+      (changeTabMenu)="changeTabMenu($event)"
+    ></app-products-to-buy>
+    <app-products
+      *ngIf="type === 'ADMIN'"
+      [type]="type"
+      (setLoading)="isLoading = $event"
+    ></app-products>
+  </div>
+
+  <div [hidden]="!customer">
+    <app-customers></app-customers>
+  </div>
+
+  <div [hidden]="!pedido">
+    <app-pedidos [reloadPedido]="reloadPedido" [type]="type" (setLoading)="isLoading = $event"></app-pedidos>
+  </div>
+</app-menu>

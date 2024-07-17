@@ -1,0 +1,42 @@
+.produto-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 20px;
+}
+
+.produto-card {
+  margin: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+  position: relative;
+}
+
+.produto-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.produto-info {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-title {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0;
+}
+
+mat-card-subtitle {
+  font-size: 1.2em;
+  color: #ff5722; /* Cor do preço */
+}
+
+mat-card-content p {
+  margin: 10px 0;
+  font-size: 1em;
+}
+
+button mat-icon {
+  margin-right: 5px;
+}

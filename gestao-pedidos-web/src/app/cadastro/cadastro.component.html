@@ -1,0 +1,165 @@
+<app-loading-spinner *ngIf="isLoading && !isPerfil"></app-loading-spinner>
+
+<div
+  *ngIf="!isPerfil"
+  class="d-flex justify-content-center bg-light align-items-center"
+  style="height: 100vh"
+>
+  <mat-card class="w-55 p-3">
+    <mat-card-title class="text-center">Cadastro</mat-card-title>
+    <hr />
+    <ng-container *ngTemplateOutlet="form"></ng-container>
+    <mat-card-content> </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="isPerfil">
+  <ng-container *ngTemplateOutlet="form"></ng-container>
+</div>
+
+<ng-template #form>
+  <form [formGroup]="cadastroForm">
+    <div class="row">
+      <div class="col-12 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="nome" required />
+          <mat-error *ngIf="cadastroForm.get('nome')?.invalid"
+            >Nome é obrigatório.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-2 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>CEP</mat-label>
+          <input matInput formControlName="cep" required (change)="viaCep()" mask="00000-000" />
+          <mat-error *ngIf="cadastroForm.get('cep')?.invalid"
+            >CEP é obrigatório</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-8 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Logradouro</mat-label>
+          <input matInput formControlName="logradouro" required />
+          <mat-error *ngIf="cadastroForm.get('logradouro')?.invalid"
+            >Logradouro é obrigatório.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-2 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Número</mat-label>
+          <input matInput formControlName="numero" required />
+          <mat-error *ngIf="cadastroForm.get('numero')?.invalid"
+            >Número é obrigatório.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-6 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Bairro</mat-label>
+          <input matInput formControlName="bairro" required />
+          <mat-error *ngIf="cadastroForm.get('bairro')?.invalid"
+            >Bairro é obrigatório.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-6 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Complemento</mat-label>
+          <input matInput formControlName="complemento" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-4 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Telefone</mat-label>
+          <input matInput formControlName="telefone" required mask="(00)00000-0000" />
+          <mat-error *ngIf="cadastroForm.get('telefone')?.invalid"
+            >Telefone é obrigatório</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-8 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" required />
+          <mat-error *ngIf="cadastroForm.get('email')?.invalid"
+            >Email é obrigatório</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-8 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>CPF</mat-label>
+          <input matInput formControlName="cpf" required mask="000.000.000-00"/>
+          <mat-error *ngIf="cadastroForm.get('cpf')?.invalid"
+            >CPF é obrigatório</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-4 form-group">
+        <mat-form-field class="w-100">
+          <mat-label>Data de Nascimento</mat-label>
+          <input
+            matInput
+            formControlName="dataNascimento"
+            [matDatepicker]="picker"
+            required
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="cadastroForm.get('dataNascimento')?.invalid"
+            >Data de Nascimento é obrigatória.</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="col-6 form-group" *ngIf="!isPerfil">
+        <mat-form-field class="w-100">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="password" required />
+          <mat-error *ngIf="cadastroForm.get('password')?.invalid"
+            >Senha é obrigatória.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-6 form-group" *ngIf="!isPerfil">
+        <mat-form-field class="w-100">
+          <mat-label>Permissão</mat-label>
+          <mat-select formControlName="role" required>
+            <mat-option value="ROLE_CLIENTE">Cliente</mat-option>
+            <mat-option value="ROLE_ADMIN">Administrador</mat-option>
+          </mat-select>
+          <mat-error *ngIf="cadastroForm.get('role')?.invalid"
+            >Permissão é obrigatória.</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <button
+        (click)="isPerfil ? clear() : navigateToLogin()"
+        style="margin-right: 15px"
+        mat-raised-button
+        color="secondary"
+      >
+        {{ isPerfil ? "Limpar alterações" : "Voltar" }}
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="cadastroForm.invalid"
+        (click)="!isPerfil ? register() : update()"
+      >
+        {{ isPerfil ? "Salvar Alterações" : "Cadastrar" }}
+      </button>
+    </div>
+  </form>
+</ng-template>

@@ -1,0 +1,68 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-end mb-3"></div>
+
+  <h2 *ngIf="!pedidos.length">Não há pedidos há serem exibidos!</h2>
+
+  <div class="d-flex justify-content-center mb-3">
+    <button mat-raised-button color="primary" (click)="loadPedido('Atualizado com sucesso!')">
+      <mat-icon>refresh</mat-icon> Atualizar
+    </button>
+  </div>
+
+  <mat-accordion *ngIf="pedidos.length > 0 && !isLoading">
+    <mat-expansion-panel *ngFor="let pedido of pedidos">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ pedido.clienteNome }}
+        </mat-panel-title>
+        <mat-panel-description class="justify-content-around">
+          <p>
+            {{ pedido.enderecoCompleto }}
+          </p>
+          <p>STATUS: {{ pedido.status === 'PAGO' ? 'AGUARDANDO ENTREGA' :  pedido.status}}</p>
+          <p>TOTAL: {{ pedido.total | currency : "BRL" }} </p>
+          
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <button
+        *ngIf="type === 'ADMIN' && pedido.status === 'PAGO'"
+        mat-raised-button
+        color="primary"
+        style="margin-right: 15px"
+        (click)="toDeliver(pedido.identificador)"
+      >
+        Entregar
+      </button>
+      <mat-table [dataSource]="pedido.itemList" class="mat-elevation-z8">
+        <!-- Nome Column -->
+        <ng-container matColumnDef="nome">
+          <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item.nome }} </mat-cell>
+        </ng-container>
+
+        <!-- Descricao Column -->
+        <ng-container matColumnDef="descricao">
+          <mat-header-cell *matHeaderCellDef> Descrição </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item.descricao }} </mat-cell>
+        </ng-container>
+
+        <!-- Preco Column -->
+        <ng-container matColumnDef="preco">
+          <mat-header-cell *matHeaderCellDef> Preço </mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            {{ item.preco | currency : "BRL" }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Quantidade Column -->
+        <ng-container matColumnDef="quantidade">
+          <mat-header-cell *matHeaderCellDef> Quantidade </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item.quantidade }} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="rowDef"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: rowDef"></mat-row>
+      </mat-table>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

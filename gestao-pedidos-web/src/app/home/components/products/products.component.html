@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-end mb-3">
+    <div class="d-flex" *ngIf="type === 'ADMIN'">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openProductForm()"
+        style="margin-right: 15px"
+      >
+        Adicionar Produto
+      </button>
+      <input
+        #fileInput
+        type="file"
+        id="fileInput"
+        (change)="onFileSelected($event)"
+        hidden
+      />
+      <button mat-raised-button color="primary" (click)="openFileDialog()">
+        Escolher Arquivo
+      </button>
+    </div>
+  </div>
+
+  <h2 *ngIf="!products.length">Não há produtos cadastrados!</h2>
+  <mat-table *ngIf="products.length" [dataSource]="products" class="mat-elevation-z8">
+    <ng-container matColumnDef="nome">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let produto"> {{ produto.nome }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="descricao">
+      <mat-header-cell *matHeaderCellDef> Descrição </mat-header-cell>
+      <mat-cell *matCellDef="let produto"> {{ produto.descricao }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="preco">
+      <mat-header-cell *matHeaderCellDef> Preço </mat-header-cell>
+      <mat-cell *matCellDef="let produto">
+        {{ produto.preco | currency : "BRL" }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="qtdEstoque">
+      <mat-header-cell *matHeaderCellDef>
+        Quantidade em Estoque
+      </mat-header-cell>
+      <mat-cell *matCellDef="let produto"> {{ produto.qtdEstoque }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let produto">
+        <button mat-icon-button color="primary" (click)="editProduto(produto)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="deleteProduto(produto.id!)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="rowDef"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: rowDef"></mat-row>
+  </mat-table>
+</div>
