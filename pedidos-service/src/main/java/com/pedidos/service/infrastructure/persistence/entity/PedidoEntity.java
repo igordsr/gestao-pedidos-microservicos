@@ -19,7 +19,7 @@ public class PedidoEntity implements IConverterToModal<Pedido> {
     private UUID id;
     @Column(nullable = false, name = "id_cliente")
     private UUID idCliente;
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemEntity> itens;
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)

@@ -7,13 +7,17 @@ import com.pedidos.service.domain.model.StatusPedido;
 import com.pedidos.service.infrastructure.config.SecurityUtils;
 import com.pedidos.service.infrastructure.persistence.entity.ItemEntity;
 import com.pedidos.service.infrastructure.persistence.entity.PedidoEntity;
+import com.pedidos.service.infrastructure.persistence.entity.pk.ItemPK;
 import com.pedidos.service.infrastructure.persistence.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -62,12 +66,43 @@ public class PedidoService implements IManderDadosPedidoContract {
     }
 
     @Override
-    public Pedido atualizar(UUID identificador, Pedido objeto) {
-        final PedidoEntity pedidoEntity = this.pedidoRepository.findById(identificador).orElseThrow(() -> new RegistroNaoEncontradoException(objeto.getIdentificador().toString()));
-        final List<ItemEntity> itens = ItemEntity.getInstance(pedidoEntity, objeto.getItemList());
-        pedidoEntity.setStatusPedido(objeto.getStatusPedido());
-        pedidoEntity.setItens(itens);
-        return this.pedidoRepository.save(pedidoEntity).toModal();
+    public Pedido atualizar(UUID identificador, Pedido pedido) {
+        final PedidoEntity pedidoEntity = this.pedidoRepository.findById(identificador).orElseThrow(() -> new RegistroNaoEncontradoException(identificador.toString()));
+        final List<ItemEntity> itens = ItemEntity.getInstance(pedidoEntity, pedido.getItemList());
+        pedidoEntity.setStatusPedido(pedido.getStatusPedido());
+        this.mergeItens(pedidoEntity, itens);
+        pedido = this.pedidoRepository.save(pedidoEntity).toModal();
+        return pedido;
+    }
+
+    private void mergeItens(final PedidoEntity pedidoEntity, List<ItemEntity> itens) {
+        // Map to hold the current items with their produtoId as key
+        Map<UUID, ItemEntity> currentItemsMap = pedidoEntity.getItens().stream().collect(Collectors.toMap(item -> item.getId().getProdutoId(), item -> item));
+        // List to hold new items
+        List<ItemEntity> newItems = new ArrayList<>();
+
+        // Process incoming items
+        for (ItemEntity incomingItem : itens) {
+            ItemPK incomingItemPK = incomingItem.getId();
+            UUID produtoId = incomingItemPK.getProdutoId();
+
+            if (currentItemsMap.containsKey(produtoId)) {
+                // Update existing item
+                ItemEntity existingItem = currentItemsMap.get(produtoId);
+                existingItem.setQuantidade(incomingItem.getQuantidade());
+                currentItemsMap.remove(produtoId);
+            } else {
+                // Add new item
+                newItems.add(incomingItem);
+            }
+        }
+
+        // Remaining items in currentItemsMap need to be removed
+        List<ItemEntity> itemsToRemove = new ArrayList<>(currentItemsMap.values());
+
+        // Update pedidoEntity's items
+        pedidoEntity.getItens().removeAll(itemsToRemove);
+        pedidoEntity.getItens().addAll(newItems);
     }
 
     @Override

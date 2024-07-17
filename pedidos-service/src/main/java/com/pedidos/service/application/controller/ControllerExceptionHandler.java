@@ -2,6 +2,7 @@ package com.pedidos.service.application.controller;
 
 import com.pedidos.service.domain.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -55,12 +57,14 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<CustomException> validationDataIntegrityViolationException(DataIntegrityViolationException exception, WebRequest request) {
+        log.error(exception.getMessage());
         EntidadeNaoProcessavelException err = new EntidadeNaoProcessavelException();
         return ResponseEntity.status(err.getCode()).body(err);
     }
 
 
     private ResponseEntity<CustomException> toCustomException(CustomException err, HttpServletRequest httpServletRequest) {
+        log.error(err.getMessage());
         err.setPath(httpServletRequest.getRequestURI());
         return ResponseEntity.status(err.getCode()).body(err);
     }

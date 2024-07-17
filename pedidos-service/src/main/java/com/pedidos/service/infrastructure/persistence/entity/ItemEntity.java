@@ -4,10 +4,15 @@ import com.pedidos.service.domain.contract.rule.application.IConverterToModal;
 import com.pedidos.service.domain.model.Item;
 import com.pedidos.service.infrastructure.persistence.entity.pk.ItemPK;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Getter
+@Setter
 @Entity
 @Table(name = "itens_pedidos")
 public class ItemEntity implements IConverterToModal<Item> {
