@@ -102,7 +102,7 @@ class PedidoGatewayTest {
         final PedidoDTO pedidoDTO = InstanceGeneratorHelper.getPedidoDTO();
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
         when(this.materProduto.diminuirQuantidadeProdutoEstoque(any(UUID.class), any(Integer.class))).thenReturn(InstanceGeneratorHelper.getItem());
-        when(this.manterPedido.atualizar(identificador, any(Pedido.class))).thenReturn(pedido);
+        when(this.manterPedido.atualizar(identificador, pedido)).thenReturn(pedido);
 
         final PedidoDTO result = this.pedidoGateway.liquidarPedido(identificador);
 
@@ -113,7 +113,7 @@ class PedidoGatewayTest {
                 () -> Assertions.assertEquals(Objects.requireNonNull(result).itemList(), pedidoDTO.itemList()),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
                 () -> verify(this.materProduto, times(1)).diminuirQuantidadeProdutoEstoque(any(UUID.class), any(Integer.class)),
-                () -> verify(this.manterPedido, times(1)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(1)).atualizar(identificador, pedido)
         );
     }
 
@@ -123,7 +123,7 @@ class PedidoGatewayTest {
         final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.PREPARANDO_PARA_ENVIO);
         final PedidoDTO pedidoDTO = new PedidoDTO(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItemDTO()), StatusPedido.PREPARANDO_PARA_ENVIO.getDescricao());
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
-        when(this.manterPedido.atualizar(identificador, any(Pedido.class))).thenReturn(pedido);
+        when(this.manterPedido.atualizar(identificador, pedido)).thenReturn(pedido);
 
         final PedidoDTO result = this.pedidoGateway.enviar(identificador);
 
@@ -133,7 +133,7 @@ class PedidoGatewayTest {
                 () -> Assertions.assertEquals(StatusPedido.AGUARDANDO_ENTREGA.getDescricao(), result.status()),
                 () -> Assertions.assertEquals(Objects.requireNonNull(result).itemList(), pedidoDTO.itemList()),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
-                () -> verify(this.manterPedido, times(1)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(1)).atualizar(identificador, pedido)
         );
     }
 
@@ -143,7 +143,7 @@ class PedidoGatewayTest {
         final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.AGUARDANDO_ENTREGA);
         final PedidoDTO pedidoDTO = new PedidoDTO(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItemDTO()), StatusPedido.AGUARDANDO_ENTREGA.getDescricao());
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
-        when(this.manterPedido.atualizar(identificador, any(Pedido.class))).thenReturn(pedido);
+        when(this.manterPedido.atualizar(identificador, pedido)).thenReturn(pedido);
 
         final PedidoDTO result = this.pedidoGateway.entregar(identificador);
 
@@ -153,7 +153,7 @@ class PedidoGatewayTest {
                 () -> Assertions.assertEquals(StatusPedido.ENTREGUE.getDescricao(), result.status()),
                 () -> Assertions.assertEquals(pedidoDTO.itemList(), Objects.requireNonNull(result).itemList()),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
-                () -> verify(this.manterPedido, times(1)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(1)).atualizar(identificador, pedido)
         );
     }
 }

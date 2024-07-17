@@ -73,7 +73,7 @@ class PedidoUseCaseTest {
         final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.AGUARDANDO_PAGAMENTO);
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
         when(this.materProduto.diminuirQuantidadeProdutoEstoque(any(UUID.class), any(Integer.class))).thenReturn(InstanceGeneratorHelper.getItem());
-        when(this.manterPedido.atualizar(identificador, any(Pedido.class))).thenReturn(pedido);
+        when(this.manterPedido.atualizar(identificador, pedido)).thenReturn(pedido);
 
         final Pedido result = this.pedidoUseCase.liquidarPedido(identificador);
 
@@ -82,7 +82,7 @@ class PedidoUseCaseTest {
                 () -> assertEquals(result, pedido),
                 () -> assertEquals(result.getStatusPedido().name(), StatusPedido.PAGO.name()),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
-                () -> verify(this.manterPedido, times(1)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(1)).atualizar(identificador, pedido)
         );
     }
 
@@ -122,7 +122,7 @@ class PedidoUseCaseTest {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
         final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.PAGO);
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
-        when(this.manterPedido.atualizar(identificador, any(Pedido.class))).thenReturn(pedido);
+        when(this.manterPedido.atualizar(identificador, pedido)).thenReturn(pedido);
 
         final Pedido result = this.pedidoUseCase.enviar(identificador);
 
@@ -131,7 +131,7 @@ class PedidoUseCaseTest {
                 () -> assertEquals(result, pedido),
                 () -> assertEquals(result.getStatusPedido().name(), StatusPedido.AGUARDANDO_ENTREGA.name()),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
-                () -> verify(this.manterPedido, times(1)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(1)).atualizar(identificador, pedido)
         );
     }
 
@@ -140,7 +140,7 @@ class PedidoUseCaseTest {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
         final Pedido pedido = new Pedido(identificador, UUID.fromString("e3d4133c-c6aa-4a16-a104-241dffad037b"), List.of(InstanceGeneratorHelper.getItem()), StatusPedido.AGUARDANDO_ENTREGA);
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenReturn(pedido);
-        when(this.manterPedido.atualizar(identificador, any(Pedido.class))).thenReturn(pedido);
+        when(this.manterPedido.atualizar(identificador, pedido)).thenReturn(pedido);
 
         final Pedido result = this.pedidoUseCase.entregar(identificador);
         assertAll(
@@ -148,7 +148,7 @@ class PedidoUseCaseTest {
                 () -> assertEquals(result, pedido),
                 () -> assertEquals(result.getStatusPedido().name(), StatusPedido.ENTREGUE.name()),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
-                () -> verify(this.manterPedido, times(1)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(1)).atualizar(identificador, pedido)
         );
     }
 
@@ -190,7 +190,7 @@ class PedidoUseCaseTest {
         assertAll(
                 () -> assertThatThrownBy(() -> this.pedidoUseCase.liquidarPedido(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class)),
-                () -> verify(this.manterPedido, times(0)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(0)).atualizar(identificador, InstanceGeneratorHelper.getPedido())
         );
     }
 
@@ -211,17 +211,18 @@ class PedidoUseCaseTest {
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new RegistroNaoEncontradoException(identificador.toString()));
         assertAll(
                 () -> assertThatThrownBy(() -> this.pedidoUseCase.enviar(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
-                () -> verify(this.manterPedido, times(0)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(0)).atualizar(identificador, InstanceGeneratorHelper.getPedido())
         );
     }
 
     @Test
     void entregarPedidoRegistroNaoEncontradoException() {
         final UUID identificador = UUID.fromString("30f88a6e-a701-4eda-b812-5053ccb419ed");
+
         when(this.manterPedido.consultarPeloIdentificador(any(UUID.class))).thenThrow(new RegistroNaoEncontradoException(identificador.toString()));
         assertAll(
                 () -> assertThatThrownBy(() -> this.pedidoUseCase.entregar(identificador)).isInstanceOf(CustomException.class).hasMessage("O registro [30f88a6e-a701-4eda-b812-5053ccb419ed] não foi encontrado."),
-                () -> verify(this.manterPedido, times(0)).atualizar(identificador, any(Pedido.class))
+                () -> verify(this.manterPedido, times(0)).atualizar(identificador, InstanceGeneratorHelper.getPedido())
         );
     }
 
@@ -239,7 +240,7 @@ class PedidoUseCaseTest {
                             final List<String> details = customException.getDetails();
                             assertThat(details.stream().anyMatch(detail -> detail.equals("Pedido já foi pago anteriormente e está no status de PAGO"))).isTrue();
                         }),
-                () -> verify(this.manterPedido, times(0)).atualizar(identificador, any(Pedido.class)),
+                () -> verify(this.manterPedido, times(0)).atualizar(identificador, pedido),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class))
         );
     }
@@ -258,7 +259,7 @@ class PedidoUseCaseTest {
                             final List<String> details = customException.getDetails();
                             assertThat(details.stream().anyMatch(detail -> detail.equals("Este pedido não pode ser liberado para transporte pois está pendente de pagamento."))).isTrue();
                         }),
-                () -> verify(this.manterPedido, times(0)).atualizar(identificador, any(Pedido.class)),
+                () -> verify(this.manterPedido, times(0)).atualizar(identificador, pedido),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class))
         );
     }
@@ -277,7 +278,7 @@ class PedidoUseCaseTest {
                             final List<String> details = customException.getDetails();
                             assertThat(details.stream().anyMatch(detail -> detail.equals("Este pedido não pode ser liberado para entrega pois está pendente de pagamento."))).isTrue();
                         }),
-                () -> verify(this.manterPedido, times(0)).atualizar(identificador, any(Pedido.class)),
+                () -> verify(this.manterPedido, times(0)).atualizar(identificador, pedido),
                 () -> verify(this.manterPedido, times(1)).consultarPeloIdentificador(any(UUID.class))
         );
     }

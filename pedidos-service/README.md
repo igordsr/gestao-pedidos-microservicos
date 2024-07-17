@@ -34,7 +34,7 @@ docker run `
   -e SPRING_DATASOURCE_URL=<valor> `
   -e SPRING_DATASOURCE_USERNAME=<valor> `
   -e SPRING_DATASOURCE_PASSWORD=<valor> `
-  -e CLIENTE_SERVICE_URL=<valor> `
+  -e USUARIO_SERVICE_URL=<valor> `
   -e PRODUTO_SERVICE_URL=<valor> `
   -p 8083:8083 `
   pedidos-service-api:latest
