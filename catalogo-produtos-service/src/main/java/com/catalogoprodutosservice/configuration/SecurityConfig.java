@@ -30,7 +30,6 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/produto").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/produto").hasRole(Role.ROLE_ADMIN.getDescription())
-                                .requestMatchers(HttpMethod.PUT, "/produto/**").hasRole(Role.ROLE_ADMIN.getDescription())
                                 .requestMatchers(HttpMethod.DELETE, "/produto/**").hasRole(Role.ROLE_ADMIN.getDescription())
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
