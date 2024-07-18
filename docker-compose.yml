@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  cliente-service:
+  usuario-service:
     build:
-      context: ./cliente-service
+      context: ./usuario-service
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://cliente-db:3306/clienteDB
+      SPRING_DATASOURCE_URL: jdbc:mysql://usuario-db:3306/usuarioDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
-      - cliente-db
+      - usuario-db
     networks:
       - gestao-pedidos-microservicos
 
@@ -26,10 +26,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://catalogo-produtos-db:3306/catalogoProdutosDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-
-
+      USUARIO_SERVICE_URL: http://usuario-service:8081
     depends_on:
       - catalogo-produtos-db
+      - usuario-service
     networks:
       - gestao-pedidos-microservicos
 
@@ -43,38 +43,32 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://pedidos-db:3306/pedidosDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      CLIENTE_SERVICE_URL: http://cliente-service:8081
+      USUARIO_SERVICE_URL: http://usuario-service:8081
       PRODUTO_SERVICE_URL: http://catalogo-produtos-service:8082
     depends_on:
       - pedidos-db
-      - cliente-service
+      - usuario-service
       - catalogo-produtos-service
     networks:
       - gestao-pedidos-microservicos
 
-  logistica-service:
+  gestao-pedidos-web:
     build:
-      context: ./logistica-service
+      context: ./gestao-pedidos-web
       dockerfile: Dockerfile
     ports:
-      - "8084:8084"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://logistica-db:3306/logisticaDB
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      CLIENTE_SERVICE_URL: http://cliente-service:8081
-      PEDIDO_SERVICE_URL: http://pedidos-service:8083
+      - "8080:80"
     depends_on:
-      - logistica-db
-      - cliente-service
+      - usuario-service
+      - catalogo-produtos-service
       - pedidos-service
     networks:
       - gestao-pedidos-microservicos
 
-  cliente-db:
+  usuario-db:
     image: mysql:latest
     environment:
-      MYSQL_DATABASE: clienteDB
+      MYSQL_DATABASE: usuarioDB
       MYSQL_ROOT_PASSWORD: root
     networks:
       - gestao-pedidos-microservicos
@@ -101,15 +95,6 @@ services:
     ports:
       - "3309:3306"
 
-  logistica-db:
-    image: mysql:latest
-    environment:
-      MYSQL_DATABASE: logisticaDB
-      MYSQL_ROOT_PASSWORD: root
-    networks:
-      - gestao-pedidos-microservicos
-    ports:
-      - "3310:3306"
 
 networks:
   gestao-pedidos-microservicos:
