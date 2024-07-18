@@ -9,33 +9,39 @@
       >
         Adicionar Produto
       </button>
-      <input
-        #fileInput
-        type="file"
-        id="fileInput"
-        (change)="onFileSelected($event)"
-        hidden
-      />
-      <button mat-raised-button color="primary" (click)="openFileDialog()">
-        Escolher Arquivo
-      </button>
+      <div class="d-flex justify-content-center mb-3">
+        <button mat-raised-button color="primary" (click)="loadProdutos('Atualizado com sucesso!')">
+          <mat-icon>refresh</mat-icon>
+          Atualizar
+        </button>
+      </div>
+      <!--      <input-->
+      <!--        #fileInput-->
+      <!--        type="file"-->
+      <!--        id="fileInput"-->
+      <!--        (change)="onFileSelected($event)"-->
+      <!--        hidden-->
+      <!--      />-->
+      <!--      <button mat-raised-button color="primary" (click)="openFileDialog()">-->
+      <!--        Escolher Arquivo-->
+      <!--      </button>-->
     </div>
   </div>
 
   <h2 *ngIf="!products.length">Não há produtos cadastrados!</h2>
   <mat-table *ngIf="products.length" [dataSource]="products" class="mat-elevation-z8">
     <ng-container matColumnDef="nome">
-      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-      <mat-cell *matCellDef="let produto"> {{ produto.nome }} </mat-cell>
+      <mat-header-cell *matHeaderCellDef> Nome</mat-header-cell>
+      <mat-cell *matCellDef="let produto"> {{ produto.nome }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="descricao">
-      <mat-header-cell *matHeaderCellDef> Descrição </mat-header-cell>
-      <mat-cell *matCellDef="let produto"> {{ produto.descricao }} </mat-cell>
+      <mat-header-cell *matHeaderCellDef> Descrição</mat-header-cell>
+      <mat-cell *matCellDef="let produto"> {{ produto.descricao }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="preco">
-      <mat-header-cell *matHeaderCellDef> Preço </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Preço</mat-header-cell>
       <mat-cell *matCellDef="let produto">
         {{ produto.preco | currency : "BRL" }}
       </mat-cell>
@@ -45,11 +51,11 @@
       <mat-header-cell *matHeaderCellDef>
         Quantidade em Estoque
       </mat-header-cell>
-      <mat-cell *matCellDef="let produto"> {{ produto.qtdEstoque }} </mat-cell>
+      <mat-cell *matCellDef="let produto"> {{ produto.qtdEstoque }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Ações</mat-header-cell>
       <mat-cell *matCellDef="let produto">
         <button mat-icon-button color="primary" (click)="editProduto(produto)">
           <mat-icon>edit</mat-icon>
