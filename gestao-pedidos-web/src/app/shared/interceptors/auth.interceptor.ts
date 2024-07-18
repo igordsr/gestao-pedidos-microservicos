@@ -13,8 +13,8 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
 
   const token =
     typeof window !== 'undefined' && typeof window.document !== 'undefined'
-      ? localStorage.getItem('token') || 'a'
-      : '';
+      ? localStorage.getItem('token') || null
+      : null;
   let authReq = req;
 
   if (
