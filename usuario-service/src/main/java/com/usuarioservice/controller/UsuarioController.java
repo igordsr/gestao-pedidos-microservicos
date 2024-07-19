@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController()
-@RequestMapping(value = "/usuario", produces = {"application/json"})
 @Tag(name = "Usuario")
+@RequestMapping(value = "/usuario", produces = {"application/json"})
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -45,7 +46,7 @@ public class UsuarioController {
     }
 
     @PutMapping("{id}")
-    @Operation(summary = "Atualizar de Usuario", description = "Os usuarios podem atualizar os dados cadastrarei no sistema", method = "PUT")
+    @Operation(summary = "Atualizar de Usuario", description = "Os usuarios podem atualizar os dados cadastrarei no sistema", method = "PUT", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Atualização dos dados cadastrais do usuario realizado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
@@ -58,7 +59,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("{id}")
-    @Operation(summary = "Deletar usuario pelo id", description = "Esté metodo tem como finalidade permitir deletar de forma logica as informações cadastrais do usuario.", method = "Delete")
+    @Operation(summary = "Deletar usuario pelo id", description = "Esté metodo tem como finalidade permitir deletar de forma logica as informações cadastrais do usuario.", method = "Delete", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Exclusão do usuario realizado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
@@ -71,7 +72,7 @@ public class UsuarioController {
     }
 
     @GetMapping("{id}")
-    @Operation(summary = "Consultar dados do usuario pelo id", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do usuario.", method = "GET")
+    @Operation(summary = "Consultar dados do usuario pelo id", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do usuario.", method = "GET", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta do usuario realizado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),
@@ -84,7 +85,7 @@ public class UsuarioController {
     }
 
     @GetMapping()
-    @Operation(summary = "Listar todos os usuarios", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do usuario de todos o usuarios.", method = "GET")
+    @Operation(summary = "Listar todos os usuarios", description = "Esté metodo tem como finalidade permitir consultar as informações cadastrais do usuario de todos o usuarios.", method = "GET", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta do usuario realizado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida", content = {@Content(schema = @Schema(implementation = CustomException.class))}),

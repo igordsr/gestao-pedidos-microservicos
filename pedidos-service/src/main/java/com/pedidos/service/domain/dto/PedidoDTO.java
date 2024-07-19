@@ -16,7 +16,7 @@ public record PedidoDTO(
         @NotNull(message = "Descrição do produto não pode estar em nulo.")
         UUID cliente,
         @NotNull(message = "Descrição do produto não pode estar em nulo.")
-        @NotEmpty(message = "Descrição do produto não pode estar em nulo.")
+//        @NotEmpty(message = "Descrição do produto não pode estar em nulo.")
         List<@Valid ItemDTO> itemList,
         String status
 ) implements IConverterToModal<Pedido> {

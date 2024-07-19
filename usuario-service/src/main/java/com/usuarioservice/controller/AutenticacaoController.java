@@ -5,6 +5,8 @@ import com.usuarioservice.dto.UsuarioLoginDTO;
 import com.usuarioservice.jwt.JwtToken;
 import com.usuarioservice.jwt.JwtUserDetails;
 import com.usuarioservice.jwt.JwtUserDetailsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,7 @@ public class AutenticacaoController {
 
 
     @GetMapping(value = "/auth", produces = "application/json")
+    @Operation(summary = "Listar todos os usuarios", description = "Recupera as permissões do usuário por meio do token", method = "GET", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<UserDetailsDTO> autenticar() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!Objects.isNull(authentication) && authentication.isAuthenticated()) {
