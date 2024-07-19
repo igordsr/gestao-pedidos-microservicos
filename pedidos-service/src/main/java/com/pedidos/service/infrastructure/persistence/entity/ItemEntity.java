@@ -5,6 +5,7 @@ import com.pedidos.service.domain.model.Item;
 import com.pedidos.service.infrastructure.persistence.entity.pk.ItemPK;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "itens_pedidos")
 public class ItemEntity implements IConverterToModal<Item> {
     @EmbeddedId

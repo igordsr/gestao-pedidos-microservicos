@@ -11,6 +11,7 @@ import com.pedidos.service.infrastructure.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,9 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController()
-@RequestMapping(value = "/pedido", produces = {"application/json"})
 @Tag(name = "Pedido")
+@SecurityRequirement(name = "bearerAuth")
+@RequestMapping(value = "/pedido", produces = {"application/json"})
 public class PedidoController {
     private final PedidoGateway pedidoGateway;
 
