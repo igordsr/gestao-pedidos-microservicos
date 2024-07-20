@@ -2,10 +2,8 @@ package com.catalogoprodutosservice.configuration;
 
 import com.catalogoprodutosservice.feign.vo.UserDetailsVO;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Principal;
 import java.util.Collection;
 import java.util.UUID;
 
