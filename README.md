@@ -65,7 +65,7 @@ Os serviços foram desenhados seguindo princípios de arquitetura de microsservi
 - **ClienteService**: Gerencia operações relacionadas aos clientes.
 - **ProdutoService**: Gerencia o catálogo de produtos e controle de estoque.
 - **PedidoService**: Centraliza o processamento e gerenciamento de pedidos.
-- **EntregaService**: Gerencia a logística e rastreamento de entregas.
+
 
 ## Principais Endpoints
 
@@ -105,18 +105,6 @@ Os serviços foram desenhados seguindo princípios de arquitetura de microsservi
     - **Parâmetros**: Dados do pedido.
     - **Resposta**: Pedido criado.
 
-### EntregaService
-
-- **GET /entregas**
-    - **Descrição**: Lista todas as entregas.
-    - **Parâmetros**: Nenhum.
-    - **Resposta**: JSON com lista de entregas.
-
-- **POST /entregas**
-    - **Descrição**: Atualiza o status da entrega.
-    - **Parâmetros**: Dados da entrega.
-    - **Resposta**: Status da entrega atualizado.
-
 ## Guias de Implantação
 
 ### Requisitos
@@ -146,7 +134,6 @@ Para acessar a documentação detalhada dos endpoints das APIs, utilize os segui
 - **Cliente**: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
 - **Produto**: [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
 - **Pedidos**: [http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)
-- **Logística**: [http://localhost:8084/swagger-ui/index.html](http://localhost:8084/swagger-ui/index.html)
 
 ### Fluxo de Uso
 
@@ -253,14 +240,4 @@ Para acessar a documentação detalhada dos endpoints das APIs, utilize os segui
 - **Pagar Pedido**:
     ```sh
     curl -X PUT http://localhost:8083/pedido/9248db63-3a14-4399-b191-07dc018616f1/efetuar-pagamento
-    ```
-
-- **Gerar Relatório**:
-    ```sh
-    curl -X GET http://localhost:8084/entrega
-    ```
-
-- **Confirmar Entrega**:
-    ```sh
-    curl -X PATCH http://localhost:8084/entrega/6cb79855-3180-4490-81f9-c7fc2c7780e2
     ```
